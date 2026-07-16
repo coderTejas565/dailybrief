@@ -8,6 +8,8 @@ import { createMessage } from "@/lib/repositories/messages.repo";
 
 import type { WhatsAppIncomingMessage } from "@/lib/modules/whatsapp/types";
 
+import { embedText } from "@/lib/modules/memory/embed";
+
 export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
   // 1. Find or create the user
   const user = await findOrCreateUser(from);
@@ -15,11 +17,16 @@ export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
   // 2. Classify the message
   const classification = await classifyMessage(body);
 
+  const memoryEmbedding  = classification.remember
+  ? await embedText(body)
+  : undefined;
+
   // 3. Save it
   const message = await createMessage({
     userId: user.id,
     rawText: body,
     classification,
+    embedding: memoryEmbedding 
   });
 
   // 4. Build confirmation reply

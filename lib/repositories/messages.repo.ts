@@ -9,9 +9,10 @@ type CreateMessageInput = {
   userId: string;
   rawText: string;
   classification: ClassificationResult;
+  embedding?: number[];
 };
 
-export async function createMessage({ userId, rawText, classification }: CreateMessageInput) {
+export async function createMessage({ userId, rawText, classification, embedding }: CreateMessageInput) {
   const [message] = await db
     .insert(messages)
     .values({
@@ -24,6 +25,8 @@ export async function createMessage({ userId, rawText, classification }: CreateM
       extractedDate: classification.date ? new Date(classification.date) : null,
 
       remember: classification.remember,
+
+      embedding: embedding ?? null,
     })
     .returning();
 
