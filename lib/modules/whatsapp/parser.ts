@@ -1,8 +1,6 @@
 import type { WhatsAppIncomingMessage } from "./types";
 
-export function parseIncomingWhatsAppMessage(
-  formData: FormData
-): WhatsAppIncomingMessage {
+export function parseIncomingWhatsAppMessage(formData: FormData): WhatsAppIncomingMessage {
   return {
     from: formData.get("From") as string,
     body: formData.get("Body") as string,

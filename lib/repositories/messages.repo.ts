@@ -3,7 +3,7 @@ import { messages } from "@/lib/db/schema";
 
 import type { ClassificationResult } from "@/lib/modules/classification/classify";
 
-import { and, eq, desc } from "drizzle-orm";
+import { and, eq, desc, ne } from "drizzle-orm";
 
 type CreateMessageInput = {
   userId: string;
@@ -11,11 +11,7 @@ type CreateMessageInput = {
   classification: ClassificationResult;
 };
 
-export async function createMessage({
-  userId,
-  rawText,
-  classification,
-}: CreateMessageInput) {
+export async function createMessage({ userId, rawText, classification }: CreateMessageInput) {
   const [message] = await db
     .insert(messages)
     .values({
@@ -25,9 +21,7 @@ export async function createMessage({
       category: classification.category,
       priority: classification.priority,
 
-      extractedDate: classification.date
-        ? new Date(classification.date)
-        : null,
+      extractedDate: classification.date ? new Date(classification.date) : null,
 
       remember: classification.remember,
     })
@@ -36,17 +30,14 @@ export async function createMessage({
   return message;
 }
 
-export async function getOpenMessagesByUser(
-  userId: string
-) {
+export async function getOpenMessagesByUser(userId: string) {
   return db.query.messages.findMany({
     where: and(
       eq(messages.userId, userId),
-      eq(messages.status, "open")
+      eq(messages.status, "open"),
+      ne(messages.category, "JUNK"),
     ),
 
-    orderBy: [
-      desc(messages.createdAt)
-    ],
+    orderBy: [desc(messages.createdAt)],
   });
 }

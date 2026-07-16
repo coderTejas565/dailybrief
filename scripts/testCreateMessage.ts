@@ -5,9 +5,7 @@ import { classifyMessage } from "@/lib/modules/classification/classify";
 async function main() {
   const user = await findOrCreateUser("whatsapp:+911234567890");
 
-  const classification = await classifyMessage(
-    "Need to finish backend before Friday."
-  );
+  const classification = await classifyMessage("Need to finish backend before Friday.");
 
   const message = await createMessage({
     userId: user.id,

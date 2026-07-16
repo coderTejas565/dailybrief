@@ -8,10 +8,7 @@ import { createMessage } from "@/lib/repositories/messages.repo";
 
 import type { WhatsAppIncomingMessage } from "@/lib/modules/whatsapp/types";
 
-export async function ingestMessage({
-  from,
-  body,
-}: WhatsAppIncomingMessage) {
+export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
   // 1. Find or create the user
   const user = await findOrCreateUser(from);
 
@@ -27,8 +24,8 @@ export async function ingestMessage({
 
   // 4. Build confirmation reply
   const reply = buildConfirmationMessage({
-  classification,
-});
+    classification,
+  });
 
   // 5. Send reply
   await sendWhatsApp(from, reply);

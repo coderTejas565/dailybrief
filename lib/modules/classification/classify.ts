@@ -6,27 +6,15 @@ import { buildClassificationPrompt } from "./prompts";
 
 export const classificationSchema = z.object({
   title: z.string(),
-  category: z.enum([
-    "TASK",
-    "REMINDER",
-    "NOTE",
-    "IDEA",
-    "JUNK",
-  ]),
-  priority: z.enum([
-    "HIGH",
-    "MEDIUM",
-    "LOW",
-  ]),
+  category: z.enum(["TASK", "REMINDER", "NOTE", "IDEA", "JUNK"]),
+  priority: z.enum(["HIGH", "MEDIUM", "LOW"]),
   date: z.string().nullable(),
   remember: z.boolean(),
 });
 
 export type ClassificationResult = z.infer<typeof classificationSchema>;
 
-export async function classifyMessage(
-  message: string
-): Promise<ClassificationResult> {
+export async function classifyMessage(message: string): Promise<ClassificationResult> {
   const response = await gemini.models.generateContent({
     model: "gemini-2.5-flash",
     contents: buildClassificationPrompt(message),

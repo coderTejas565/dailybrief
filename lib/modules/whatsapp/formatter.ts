@@ -7,8 +7,7 @@ type BuildConfirmationMessageInput = {
 export function buildConfirmationMessage({
   classification,
 }: BuildConfirmationMessageInput): string {
-  let message =
-    `✅ Saved as ${classification.category.toLowerCase()}.\n\n`;
+  let message = `✅ Saved as ${classification.category.toLowerCase()}.\n\n`;
 
   message += `📝 ${classification.title}`;
 

@@ -5,27 +5,14 @@ import { sendWhatsApp } from "@/lib/modules/whatsapp/client";
 
 import { formatBrief } from "./formatter";
 
-
-export async function handleBriefCommand(
-  from: string
-) {
-
+export async function handleBriefCommand(from: string) {
   const user = await findOrCreateUser(from);
 
+  const messages = await getOpenMessagesByUser(user.id);
 
-  const messages =
-    await getOpenMessagesByUser(user.id);
+  const brief = formatBrief(messages);
 
-
-  const brief =
-    formatBrief(messages);
-
-
-  await sendWhatsApp(
-    from,
-    brief
-  );
-
+  await sendWhatsApp(from, brief);
 
   return {
     count: messages.length,
