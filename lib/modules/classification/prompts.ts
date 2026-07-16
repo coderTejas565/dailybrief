@@ -27,7 +27,7 @@ Return this exact JSON schema:
   "category": "TASK | REMINDER | NOTE | IDEA | JUNK",
   "priority": "HIGH | MEDIUM | LOW",
   "date": "YYYY-MM-DD | null",
-  "remember": true
+  "remember": "boolean"
 }
 
 Rules:

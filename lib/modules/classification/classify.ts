@@ -1,26 +1,28 @@
+import { z } from "zod";
+
 import { gemini } from "@/lib/modules/gemini/client";
 
 import { buildClassificationPrompt } from "./prompts";
 
-export type MessageCategory =
-  | "TASK"
-  | "REMINDER"
-  | "NOTE"
-  | "IDEA"
-  | "JUNK";
+export const classificationSchema = z.object({
+  title: z.string(),
+  category: z.enum([
+    "TASK",
+    "REMINDER",
+    "NOTE",
+    "IDEA",
+    "JUNK",
+  ]),
+  priority: z.enum([
+    "HIGH",
+    "MEDIUM",
+    "LOW",
+  ]),
+  date: z.string().nullable(),
+  remember: z.boolean(),
+});
 
-export type MessagePriority =
-  | "HIGH"
-  | "MEDIUM"
-  | "LOW";
-
-export interface ClassificationResult {
-  title: string;
-  category: MessageCategory;
-  priority: MessagePriority;
-  date: string | null;
-  remember: boolean;
-}
+export type ClassificationResult = z.infer<typeof classificationSchema>;
 
 export async function classifyMessage(
   message: string
@@ -39,5 +41,13 @@ export async function classifyMessage(
     throw new Error("Gemini returned an empty response.");
   }
 
-  return JSON.parse(text) as ClassificationResult;
+  let parsed: unknown;
+
+  try {
+    parsed = JSON.parse(text);
+  } catch {
+    throw new Error("Gemini returned invalid JSON.");
+  }
+
+  return classificationSchema.parse(parsed);
 }
