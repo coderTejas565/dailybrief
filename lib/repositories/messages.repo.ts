@@ -36,7 +36,7 @@ export async function markMessageDone(messageId: string) {
     .set({
       status: "done",
     })
-    .where(eq(messages.id, messageId))
+    .where(and(eq(messages.id, messageId), eq(messages.status, "open")))
     .returning();
 
   return updated;
@@ -53,5 +53,11 @@ export async function getOpenMessagesByUser(userId: string, limit?: number) {
     orderBy: [desc(messages.createdAt)],
 
     ...(limit ? { limit } : {}),
+  });
+}
+
+export async function getMessageById(id: string) {
+  return db.query.messages.findFirst({
+    where: eq(messages.id, id),
   });
 }

@@ -1,31 +1,62 @@
-import { pgTable, uuid, text, timestamp, vector, boolean } from "drizzle-orm/pg-core";
+import { db } from "@/lib/db/client";
 
-export const users = pgTable("users", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  phone: text("phone").notNull().unique(),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+import { briefs, briefItems } from "@/lib/db/schema";
 
-export const messages = pgTable("messages", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
-    .notNull(),
-  rawText: text("raw_text").notNull(),
-  category: text("category").notNull(),
-  priority: text("priority"),
-  extractedDate: timestamp("extracted_date"),
-  remember: boolean("remember").default(false),
-  status: text("status").default("open"),
-  embedding: vector("embedding", { dimensions: 768 }),
-  createdAt: timestamp("created_at").defaultNow().notNull(),
-});
+import { eq, desc, and } from "drizzle-orm";
 
-export const briefs = pgTable("briefs", {
-  id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id")
-    .references(() => users.id)
-    .notNull(),
-  content: text("content").notNull(),
-  sentAt: timestamp("sent_at").defaultNow().notNull(),
-});
+type CreateBriefInput = {
+  userId: string;
+  content: string;
+
+  briefItems: {
+    position: number;
+    messageId: string;
+  }[];
+};
+
+export async function createBriefWithItems({
+  userId,
+  content,
+  briefItems: items,
+}: CreateBriefInput) {
+  const [brief] = await db
+    .insert(briefs)
+    .values({
+      userId,
+      content,
+    })
+    .returning();
+
+  if (!brief) {
+    throw new Error("Failed to create brief");
+  }
+
+  if (items.length > 0) {
+    await db.insert(briefItems).values(
+      items.map((item) => ({
+        briefId: brief.id,
+        messageId: item.messageId,
+        position: item.position,
+      })),
+    );
+  }
+  return brief;
+}
+
+export async function getLatestBriefForUser(userId: string) {
+  return db.query.briefs.findFirst({
+    where: eq(briefs.userId, userId),
+
+    orderBy: [desc(briefs.sentAt)],
+  });
+}
+
+export async function getBriefItemByPosition(briefId: string, position: number) {
+  return db.query.briefItems.findFirst({
+    where: and(
+      eq(briefItems.briefId, briefId),
+
+      eq(briefItems.position, position),
+    ),
+  });
+}

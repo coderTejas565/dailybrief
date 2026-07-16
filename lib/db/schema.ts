@@ -58,11 +58,15 @@ export const briefItems = pgTable(
     id: uuid("id").defaultRandom().primaryKey(),
 
     briefId: uuid("brief_id")
-      .references(() => briefs.id)
+      .references(() => briefs.id, {
+        onDelete: "cascade",
+      })
       .notNull(),
 
     messageId: uuid("message_id")
-      .references(() => messages.id)
+      .references(() => messages.id, {
+        onDelete: "cascade",
+      })
       .notNull(),
 
     position: integer("position").notNull(),
