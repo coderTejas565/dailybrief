@@ -11,11 +11,7 @@ const CATEGORY_LABELS: Record<string, string> = {
 
 export function formatBrief(items: Message[]) {
   if (items.length === 0) {
-    return `
-📋 DailyBrief
-
-Nothing pending 🎉
-`;
+    return "📋 DailyBrief\n\nNothing pending 🎉";
   }
 
   const groups: Record<string, Message[]> = {};
