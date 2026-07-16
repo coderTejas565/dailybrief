@@ -41,3 +41,29 @@ export async function getOpenMessagesByUser(userId: string) {
     orderBy: [desc(messages.createdAt)],
   });
 }
+
+export async function markMessageDone(messageId: string) {
+  const [updated] = await db
+    .update(messages)
+    .set({
+      status: "done",
+    })
+    .where(eq(messages.id, messageId))
+    .returning();
+
+  return updated;
+}
+
+export async function getRecentOpenMessages(userId: string) {
+  return db.query.messages.findMany({
+    where: and(
+      eq(messages.userId, userId),
+      eq(messages.status, "open"),
+      ne(messages.category, "JUNK"),
+    ),
+
+    orderBy: [desc(messages.createdAt)],
+
+    limit: 10,
+  });
+}

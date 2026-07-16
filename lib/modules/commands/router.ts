@@ -2,21 +2,31 @@ import type { WhatsAppIncomingMessage } from "@/lib/modules/whatsapp/types";
 
 import { ingestMessage } from "@/lib/modules/ingestion/ingest";
 import { handleBriefCommand } from "@/lib/modules/brief/generate";
+import { resolveDoneAction } from "@/lib/modules/actions/resolve";
+
+import { sendWhatsApp } from "@/lib/modules/whatsapp/client";
+
+import { detectCommand } from "./detect";
 
 export async function routeIncomingMessage(message: WhatsAppIncomingMessage): Promise<unknown> {
-  const body = message.body.trim();
+  const command = detectCommand(message.body);
 
-  if (!body) {
-    return;
-  }
-
-  const command = body.toLowerCase();
-
-  switch (command) {
-    case "brief me":
+  switch (command.type) {
+    case "BRIEF":
       return handleBriefCommand(message.from);
 
-    default:
+    case "DONE": {
+      const result = await resolveDoneAction(message.from, command.index);
+
+      await sendWhatsApp(message.from, result.reply);
+
+      return result;
+    }
+
+    case "NONE":
       return ingestMessage(message);
+
+    default:
+      return null;
   }
 }

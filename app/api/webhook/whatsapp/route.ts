@@ -11,15 +11,12 @@ export async function POST(request: Request) {
 
     await routeIncomingMessage(message);
 
-    return new NextResponse(
-  "<Response></Response>",
-  {
-    status: 200,
-    headers: {
-      "Content-Type": "text/xml",
-    },
-  }
-);
+    return new NextResponse("<Response></Response>", {
+      status: 200,
+      headers: {
+        "Content-Type": "text/xml",
+      },
+    });
   } catch (error) {
     console.error("Webhook Error:", error);
 
