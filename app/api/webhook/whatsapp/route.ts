@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 
-import { ingestMessage } from "@/lib/modules/ingestion/ingest";
+import { routeIncomingMessage } from "@/lib/modules/commands/router";
 import { parseIncomingWhatsAppMessage } from "@/lib/modules/whatsapp/parser";
 
 export async function POST(request: Request) {
@@ -9,7 +9,7 @@ export async function POST(request: Request) {
 
     const message = parseIncomingWhatsAppMessage(formData);
 
-    await ingestMessage(message);
+    await routeIncomingMessage(message);
 
     return new NextResponse("OK", {
       status: 200,

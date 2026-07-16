@@ -3,6 +3,8 @@ import { messages } from "@/lib/db/schema";
 
 import type { ClassificationResult } from "@/lib/modules/classification/classify";
 
+import { and, eq, desc } from "drizzle-orm";
+
 type CreateMessageInput = {
   userId: string;
   rawText: string;
@@ -32,4 +34,19 @@ export async function createMessage({
     .returning();
 
   return message;
+}
+
+export async function getOpenMessagesByUser(
+  userId: string
+) {
+  return db.query.messages.findMany({
+    where: and(
+      eq(messages.userId, userId),
+      eq(messages.status, "open")
+    ),
+
+    orderBy: [
+      desc(messages.createdAt)
+    ],
+  });
 }
