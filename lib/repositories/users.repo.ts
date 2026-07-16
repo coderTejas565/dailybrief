@@ -4,9 +4,7 @@ import { eq, type InferSelectModel } from "drizzle-orm";
 
 type User = InferSelectModel<typeof users>;
 
-export async function findOrCreateUser(
-  whatsappNumber: string
-): Promise<User> {
+export async function findOrCreateUser(whatsappNumber: string): Promise<User> {
   const existing = await db.query.users.findFirst({
     where: eq(users.phone, whatsappNumber),
   });

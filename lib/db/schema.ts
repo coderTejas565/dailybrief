@@ -1,12 +1,4 @@
-import {
-  pgTable,
-  uuid,
-  text,
-  timestamp,
-  vector,
-  boolean,
-  real,
-} from "drizzle-orm/pg-core";
+import { pgTable, uuid, text, timestamp, vector, boolean, real } from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -23,14 +15,14 @@ export const messages = pgTable("messages", {
 
   rawText: text("raw_text").notNull(),
 
-  category: text("category").notNull(),       // TASK | REMINDER | NOTE | IDEA | JUNK
-  priority: text("priority"),                   // HIGH | MEDIUM | LOW
+  category: text("category").notNull(), // TASK | REMINDER | NOTE | IDEA | JUNK
+  priority: text("priority"), // HIGH | MEDIUM | LOW
   extractedDate: timestamp("extracted_date"),
 
   remember: boolean("remember").default(false), // gates embedding generation
-  importanceScore: real("importance_score"),     // reserved for resurfacing rank — populate in Day 3 or drop
+  importanceScore: real("importance_score"), // reserved for resurfacing rank — populate in Day 3 or drop
 
-  status: text("status").default("open"),        // open | done | snoozed | discarded
+  status: text("status").default("open"), // open | done | snoozed | discarded
 
   embedding: vector("embedding", { dimensions: 768 }), // Gemini text-embedding-004
 
@@ -43,7 +35,9 @@ export const messages = pgTable("messages", {
 
 export const briefs = pgTable("briefs", {
   id: uuid("id").defaultRandom().primaryKey(),
-  userId: uuid("user_id").references(() => users.id).notNull(),
+  userId: uuid("user_id")
+    .references(() => users.id)
+    .notNull(),
   content: text("content").notNull(),
   sentAt: timestamp("sent_at").defaultNow().notNull(),
 });
