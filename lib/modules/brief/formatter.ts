@@ -28,23 +28,17 @@ export function formatBrief(items: BriefItem[]): string {
 
   let result = "📋 DailyBrief\n";
 
-
   for (const item of items) {
-    const icon =
-      CATEGORY_LABELS[item.message.category] ?? "📌";
-
+    const icon = CATEGORY_LABELS[item.message.category] ?? "📌";
 
     result += `\n${item.position}. ${icon} ${item.message.rawText}`;
-
 
     if (item.message.extractedDate) {
       result += ` 📅 ${item.message.extractedDate.toDateString()}`;
     }
 
-
     result += "\n";
   }
-
 
   return result.trim();
 }
