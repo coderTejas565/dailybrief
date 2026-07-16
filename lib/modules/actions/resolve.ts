@@ -1,6 +1,6 @@
 import { findOrCreateUser } from "@/lib/repositories/users.repo";
 
-import { getRecentOpenMessages, markMessageDone } from "@/lib/repositories/messages.repo";
+import { getOpenMessagesByUser, markMessageDone } from "@/lib/repositories/messages.repo";
 
 type ResolveDoneResult = {
   success: boolean;
@@ -10,7 +10,7 @@ type ResolveDoneResult = {
 export async function resolveDoneAction(from: string, index: number): Promise<ResolveDoneResult> {
   const user = await findOrCreateUser(from);
 
-  const messages = await getRecentOpenMessages(user.id);
+  const messages = await getOpenMessagesByUser(user.id);
 
   const message = messages[index - 1];
 

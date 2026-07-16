@@ -1,4 +1,14 @@
-import { pgTable, uuid, text, timestamp, vector, boolean, real } from "drizzle-orm/pg-core";
+import {
+  pgTable,
+  uuid,
+  text,
+  timestamp,
+  vector,
+  boolean,
+  real,
+  integer,
+  unique,
+} from "drizzle-orm/pg-core";
 
 export const users = pgTable("users", {
   id: uuid("id").defaultRandom().primaryKey(),
@@ -41,3 +51,25 @@ export const briefs = pgTable("briefs", {
   content: text("content").notNull(),
   sentAt: timestamp("sent_at").defaultNow().notNull(),
 });
+
+export const briefItems = pgTable(
+  "brief_items",
+  {
+    id: uuid("id").defaultRandom().primaryKey(),
+
+    briefId: uuid("brief_id")
+      .references(() => briefs.id)
+      .notNull(),
+
+    messageId: uuid("message_id")
+      .references(() => messages.id)
+      .notNull(),
+
+    position: integer("position").notNull(),
+
+    createdAt: timestamp("created_at").defaultNow().notNull(),
+  },
+  (table) => ({
+    uniquePosition: unique().on(table.briefId, table.position),
+  }),
+);

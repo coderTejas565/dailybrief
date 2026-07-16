@@ -30,18 +30,6 @@ export async function createMessage({ userId, rawText, classification }: CreateM
   return message;
 }
 
-export async function getOpenMessagesByUser(userId: string) {
-  return db.query.messages.findMany({
-    where: and(
-      eq(messages.userId, userId),
-      eq(messages.status, "open"),
-      ne(messages.category, "JUNK"),
-    ),
-
-    orderBy: [desc(messages.createdAt)],
-  });
-}
-
 export async function markMessageDone(messageId: string) {
   const [updated] = await db
     .update(messages)
@@ -54,7 +42,7 @@ export async function markMessageDone(messageId: string) {
   return updated;
 }
 
-export async function getRecentOpenMessages(userId: string) {
+export async function getOpenMessagesByUser(userId: string, limit?: number) {
   return db.query.messages.findMany({
     where: and(
       eq(messages.userId, userId),
@@ -64,6 +52,6 @@ export async function getRecentOpenMessages(userId: string) {
 
     orderBy: [desc(messages.createdAt)],
 
-    limit: 10,
+    ...(limit ? { limit } : {}),
   });
 }
