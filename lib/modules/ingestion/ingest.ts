@@ -18,7 +18,20 @@ export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
   // 2. Classify the message
   const classification = await classifyMessage(body);
 
-  const memoryEmbedding = classification.remember ? await embedText(body) : undefined;
+  let memoryEmbedding: number[] | undefined;
+
+if (classification.remember) {
+  try {
+    memoryEmbedding = await embedText(body);
+  } catch (error) {
+    console.error(
+      "Embedding generation failed:",
+      error
+    );
+
+    memoryEmbedding = undefined;
+  }
+}
 
   // 3. Save it
   const message = await createMessage({
