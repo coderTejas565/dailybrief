@@ -12,6 +12,14 @@ type CreateMessageInput = {
   embedding?: number[];
 };
 
+type SimilarMessage = {
+  id: string;
+  rawText: string;
+  category: string;
+  createdAt: Date;
+  distance: number;
+};
+
 export async function createMessage({
   userId,
   rawText,
@@ -74,17 +82,16 @@ export async function getSimilarMessages(
   userId: string,
   embedding: number[],
   excludeId: string,
-  limit = 3
-) {
+  limit = 3,
+): Promise<SimilarMessage[]> {
   const vectorLiteral = `[${embedding.join(",")}]`;
 
-
-  return db.execute(sql`
+  const result = await db.execute(sql`
     SELECT
       id,
-      raw_text,
+      raw_text AS "rawText",
       category,
-      created_at,
+      created_at AS "createdAt",
       embedding <=> ${vectorLiteral}::vector AS distance
 
     FROM messages
@@ -98,4 +105,6 @@ export async function getSimilarMessages(
 
     LIMIT ${limit}
   `);
+
+  return result.rows as SimilarMessage[];
 }
