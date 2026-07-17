@@ -1,11 +1,21 @@
-import React from "react";
+import Hero from "@/components/landing/hero/hero";
+import Navbar from "@/components/landing/navbar";
+import HowItWorks from "@/components/landing/how-it-works";
+import Features from "@/components/landing/features";
+import DemoChat from "@/components/landing/demo-chat";
+import Architecture from "@/components/landing/architecture";
+import FinalCTA from "@/components/landing/footer";
 
-function page() {
+export default function Home() {
   return (
-    <div>
-      <h1> home </h1>
-    </div>
+    <main>
+      <Navbar></Navbar>
+      <Hero />
+      <HowItWorks></HowItWorks>
+      <Features />
+      <DemoChat />
+      <Architecture />
+      <FinalCTA />
+    </main>
   );
 }
-
-export default page;

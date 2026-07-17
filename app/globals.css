@@ -1,26 +1,181 @@
 @import "tailwindcss";
+@import "tw-animate-css";
+@import "shadcn/tailwind.css";
+
+
+@custom-variant dark (&:is(.dark *));
+
+
+/* =========================
+   DailyBrief Design Tokens
+========================= */
 
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+
+  /* Brand */
+
+  --background: #FAFAFC;
+  --foreground: #192B36;
+
+
+  --primary: #52A783;
+  --primary-foreground: #FFFFFF;
+
+
+  --highlight: #DFEBE9;
+
+  /* AI / intelligence moments */
+  --ai: #6C63FF;
+
+
+  /* Text */
+
+  --muted-text: #64748B;
+
+
+  /* Surfaces */
+
+  --card: #FFFFFF;
+  --card-foreground: #192B36;
+
+
+  --secondary: #F1F5F4;
+  --secondary-foreground: #192B36;
+
+
+  --muted: #F4F7F6;
+  --muted-foreground: #64748B;
+
+
+  /* Borders */
+
+  --border: #E5E7EB;
+  --input: #E5E7EB;
+
+
+  --ring: #52A783;
+
+
+  --radius: 1rem;
+
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
+
+
+/* =========================
+   Tailwind Theme
+========================= */
+
+@theme {
+
+
+  /* Brand colors */
+
+  --color-background: #FAFAFC;
+  --color-foreground: #192B36;
+
+
+  --color-primary: #52A783;
+  --color-primary-foreground: #FFFFFF;
+
+
+  --color-highlight: #DFEBE9;
+
+  --color-ai: #6C63FF;
+
+
+  --color-muted-text: #64748B;
+
+
+
+  /* shadcn */
+
+  --color-card: var(--card);
+  --color-card-foreground: var(--card-foreground);
+
+
+  --color-secondary: var(--secondary);
+  --color-secondary-foreground: var(--secondary-foreground);
+
+
+  --color-muted: var(--muted);
+  --color-muted-foreground: var(--muted-foreground);
+
+
+  --color-border: var(--border);
+  --color-input: var(--input);
+  --color-ring: var(--ring);
+
+
+
+  /* Fonts */
+
+  --font-sans: var(--font-inter);
+  --font-heading: var(--font-space);
+  --font-mono: var(--font-jetbrains);
+
+
+
+  /* Radius */
+
+  --radius-sm: calc(var(--radius) - 4px);
+  --radius-md: calc(var(--radius) - 2px);
+  --radius-lg: var(--radius);
+  --radius-xl: calc(var(--radius) + 4px);
+
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+
+
+/* =========================
+   Base Styles
+========================= */
+
+@layer base {
+
+  * {
+    @apply border-border outline-ring/50;
   }
-}
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+
+  html {
+    scroll-behavior: smooth;
+  }
+
+
+  body {
+
+    @apply bg-background text-foreground;
+
+    font-family: var(--font-inter);
+
+  }
+
+
+  h1,
+  h2,
+  h3 {
+
+    font-family: var(--font-space);
+
+    letter-spacing: -0.03em;
+
+  }
+
+
+  code,
+  pre {
+
+    font-family: var(--font-jetbrains);
+
+  }
+
+
+  ::selection {
+
+    background: #52A783;
+    color: white;
+
+  }
+
 }

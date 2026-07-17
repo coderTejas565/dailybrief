@@ -42,9 +42,11 @@ DailyBrief captures, organizes, and remembers — so nothing valuable gets lost 
 ## What DailyBrief Does
 
 ### Message Ingestion
+
 Every incoming WhatsApp message is parsed, classified by Gemini into a structured record, and stored, with a confirmation reply sent back immediately.
 
 Extracted per message:
+
 - **Title** — a clean summary of the message
 - **Category** — `TASK` · `REMINDER` · `NOTE` · `IDEA` · `JUNK`
 - **Priority** — `HIGH` · `MEDIUM` · `LOW`
@@ -52,12 +54,15 @@ Extracted per message:
 - **Remember flag** — whether this is worth resurfacing later as long-term context
 
 ### Daily Brief
+
 Send `brief me` and DailyBrief compiles every open item into a clean, numbered summary grouped by category, then sends it straight to your chat.
 
 ### Done Command
+
 Send `1 done` and the corresponding item is marked complete — resolved against a snapshot of the exact brief you were shown, not a live re-query, so the numbers never drift even if new messages arrive in between.
 
 ### Memory Resurfacing
+
 This is the differentiator. Messages worth remembering are embedded and stored as vectors. When a new message comes in, DailyBrief searches for semantically similar past memories, filters out weak matches with an LLM relevance check, and, only when it's genuinely useful, surfaces the connection back to you.
 
 ---
@@ -102,17 +107,17 @@ DailyBrief: ✅ Completed:
 
 ## Tech Stack
 
-| Layer | Choice |
-|---|---|
-| Framework | Next.js 16 (App Router) |
-| Language | TypeScript |
-| Database | PostgreSQL ([Neon](https://neon.tech)) |
-| ORM | Drizzle ORM |
-| Vector Search | pgvector |
-| Classification | Gemini 2.5 Flash |
-| Embeddings | Gemini Embedding API (`text-embedding-004`, 768-dim) |
-| Messaging | Twilio WhatsApp Sandbox |
-| Validation | Zod |
+| Layer          | Choice                                               |
+| -------------- | ---------------------------------------------------- |
+| Framework      | Next.js 16 (App Router)                              |
+| Language       | TypeScript                                           |
+| Database       | PostgreSQL ([Neon](https://neon.tech))               |
+| ORM            | Drizzle ORM                                          |
+| Vector Search  | pgvector                                             |
+| Classification | Gemini 2.5 Flash                                     |
+| Embeddings     | Gemini Embedding API (`text-embedding-004`, 768-dim) |
+| Messaging      | Twilio WhatsApp Sandbox                              |
+| Validation     | Zod                                                  |
 
 ---
 
@@ -156,14 +161,14 @@ flowchart TD
 
 ### Layer responsibilities
 
-| Layer | Responsibility | Never does |
-|---|---|---|
-| **Route** | Parses the HTTP request, delegates, returns TwiML | Business logic, DB access |
-| **Parser** | Converts Twilio's form-encoded payload into a typed internal object | Anything beyond shaping data |
-| **Command Router** | Detects `brief me` / `N done` / plain message and dispatches | Executing the logic itself |
-| **Application Services** (`ingest.ts`, `generate.ts`, `resolve.ts`) | Orchestrates the pipeline, calls domain services and repositories in order | Raw SQL, raw HTTP parsing |
-| **Domain Services** (Gemini, Twilio clients) | Wraps external API calls | App-specific business rules |
-| **Repositories** | Pure database queries | Any decision-making |
+| Layer                                                               | Responsibility                                                             | Never does                   |
+| ------------------------------------------------------------------- | -------------------------------------------------------------------------- | ---------------------------- |
+| **Route**                                                           | Parses the HTTP request, delegates, returns TwiML                          | Business logic, DB access    |
+| **Parser**                                                          | Converts Twilio's form-encoded payload into a typed internal object        | Anything beyond shaping data |
+| **Command Router**                                                  | Detects `brief me` / `N done` / plain message and dispatches               | Executing the logic itself   |
+| **Application Services** (`ingest.ts`, `generate.ts`, `resolve.ts`) | Orchestrates the pipeline, calls domain services and repositories in order | Raw SQL, raw HTTP parsing    |
+| **Domain Services** (Gemini, Twilio clients)                        | Wraps external API calls                                                   | App-specific business rules  |
+| **Repositories**                                                    | Pure database queries                                                      | Any decision-making          |
 
 The Router and Application Service layers are deliberately separate. The Router only decides what kind of request this is (`BRIEF` / `DONE` / `NONE`); it has zero knowledge of Gemini, Postgres, or Twilio. Adding a new command, for example `snooze`, never touches ingestion, brief generation, or resurfacing code — it's a new case in `detectCommand()` and one new service.
 
@@ -390,13 +395,13 @@ flowchart LR
 
 The pipeline has five points where an external call can fail: classification, embedding, similarity search, relevance check, and the WhatsApp send. The guiding principle: a failure in the memory feature should never prevent a message from being saved and acknowledged.
 
-| Stage | Failure Mode | Handling |
-|---|---|---|
-| Classification | Gemini timeout or malformed JSON | Zod validation catches malformed shape immediately; a hard failure here does block ingestion, since the record has no category to store — this is the one stage where failure is not degraded, by design, because there's no meaningful fallback classification |
-| Embedding | Gemini timeout or rate limit | Caught independently — the message still saves with `remember: true` but `embedding: null`, rather than failing the whole request |
-| Similarity search | pgvector query error | Caught in the resurfacing orchestrator — resurfacing is skipped for this message, ingestion still completes |
-| Relevance check | Malformed JSON, Zod failure, or timeout | Caught per candidate — the loop moves to the next candidate rather than aborting; if all candidates fail, no memory is surfaced, but the message and reply still complete |
-| Twilio webhook | Slow response or Twilio retry | Webhook always responds with empty TwiML (`<Response></Response>`) and a 200, regardless of whether internal errors occurred, so Twilio doesn't retry a message that's already been processed |
+| Stage             | Failure Mode                            | Handling                                                                                                                                                                                                                                                        |
+| ----------------- | --------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| Classification    | Gemini timeout or malformed JSON        | Zod validation catches malformed shape immediately; a hard failure here does block ingestion, since the record has no category to store — this is the one stage where failure is not degraded, by design, because there's no meaningful fallback classification |
+| Embedding         | Gemini timeout or rate limit            | Caught independently — the message still saves with `remember: true` but `embedding: null`, rather than failing the whole request                                                                                                                               |
+| Similarity search | pgvector query error                    | Caught in the resurfacing orchestrator — resurfacing is skipped for this message, ingestion still completes                                                                                                                                                     |
+| Relevance check   | Malformed JSON, Zod failure, or timeout | Caught per candidate — the loop moves to the next candidate rather than aborting; if all candidates fail, no memory is surfaced, but the message and reply still complete                                                                                       |
+| Twilio webhook    | Slow response or Twilio retry           | Webhook always responds with empty TwiML (`<Response></Response>`) and a 200, regardless of whether internal errors occurred, so Twilio doesn't retry a message that's already been processed                                                                   |
 
 The result: the worst-case failure mode for any single message is "saved, but without a memory connection," never a lost message, a duplicate send, or a broken reply.
 
@@ -407,10 +412,12 @@ The result: the worst-case failure mode for any single message is "saved, but wi
 A message with `remember: true` makes up to five sequential external calls before replying: classify, embed, similarity search, and up to three relevance checks. This is the main latency cost in the system.
 
 **Current mitigations:**
+
 - A distance threshold gates candidates before they reach the relevance check — most non-matches never trigger an LLM call at all
 - Relevance checks short-circuit on the first `relevant: true` result rather than checking all candidates unconditionally
 
 **Future optimizations, not yet implemented:**
+
 - **Parallelize relevance checks** — currently sequential; running them concurrently over the gated candidates would cut worst-case latency roughly three times when multiple candidates pass the distance threshold
 - **Cache classification for near-duplicate messages** — not implemented, low priority at current scale
 - **Move embedding and resurfacing to a background job** — reply to the user immediately after save, then push the memory connection as a follow-up message once resurfacing completes. This would decouple user-perceived latency from the slowest part of the pipeline entirely, at the cost of the memory connection arriving as a second message instead of inline
@@ -432,6 +439,7 @@ Honest MVP boundaries, and why each one is where it is:
 ## Local Setup
 
 ### Prerequisites
+
 - Node.js 20+
 - A [Neon](https://neon.tech) Postgres project with the `pgvector` extension enabled
 - A [Twilio](https://www.twilio.com/whatsapp) account with WhatsApp Sandbox access
@@ -525,6 +533,7 @@ Add screenshots of real WhatsApp conversations here — ingestion confirmation, 
 Add a link to your demo video here.
 
 3-minute demo flow:
+
 1. Send a message worth remembering — get an instant, structured confirmation
 2. Send `brief me` — see everything open, organized by category
 3. Send a related message days later — watch DailyBrief surface the earlier memory unprompted
