@@ -1,36 +1,441 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📋 DailyBrief
 
-## Getting Started
+**Your AI-powered WhatsApp memory assistant.**
 
-First, run the development server:
+DailyBrief turns WhatsApp the app you already live in into an intelligent second brain. Send it tasks, reminders, ideas, and notes as naturally as texting a friend. It classifies them, organizes them into a daily brief, and resurfaces relevant memories exactly when they matter.
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+---
+
+## Table of Contents
+
+- [Problem](#problem)
+- [What DailyBrief Does](#what-dailybrief-does)
+- [Example Conversation](#example-conversation)
+- [Tech Stack](#tech-stack)
+- [Architecture](#architecture)
+- [Folder Structure](#folder-structure)
+- [Database Schema](#database-schema)
+- [AI Pipeline](#ai-pipeline)
+- [Design Decisions](#design-decisions)
+- [Local Setup](#local-setup)
+- [Environment Variables](#environment-variables)
+- [Running Locally](#running-locally)
+- [Future Improvements](#future-improvements)
+- [Screenshots](#screenshots)
+- [Demo](#demo)
+
+---
+
+## Problem
+
+People constantly send themselves messages on WhatsApp reminders, ideas, learning goals, half-formed plans, notes to self. It's the fastest way to capture a thought.
+
+But that's where it ends. Messages pile up, scroll out of view, and get forgotten. There's no structure, no follow-up, and no way to resurface something useful when it's actually relevant again.
+
+**DailyBrief captures, organizes, and remembers so nothing valuable gets lost in the scroll.**
+
+---
+
+## What DailyBrief Does
+
+### 🧠 Message Ingestion
+Every incoming WhatsApp message is parsed, classified by Gemini into a structured record, and stored with a confirmation reply sent back immediately.
+
+Extracted per message:
+- **Title** — a clean summary of the message
+- **Category** — `TASK` · `REMINDER` · `NOTE` · `IDEA` · `JUNK`
+- **Priority** — `HIGH` · `MEDIUM` · `LOW`
+- **Date** — if one was mentioned
+- **Remember flag** — whether this is worth resurfacing later as long-term context
+
+### 📋 Daily Brief
+Send `brief me` and DailyBrief compiles every open item into a clean, numbered summary grouped by category then sends it straight to your chat.
+
+### ✅ Done Command
+Send `1 done` and the corresponding item is marked complete resolved against a **snapshot of the exact brief you were shown**, not a live re-query, so the numbers never drift even if new messages arrive in between.
+
+### 💡 Memory Resurfacing
+This is the differentiator. Messages worth remembering are embedded and stored as vectors. When a new message comes in, DailyBrief searches for semantically similar past memories, filters out weak matches with an LLM relevance check, and only when it's genuinely useful surfaces the connection back to you.
+
+---
+
+## Example Conversation
+
+```
+You:        Need to learn Docker for my project deployment
+DailyBrief: ✅ Saved as note.
+            📝 Learn Docker for deployment
+
+  ⋮ (10 days pass)
+
+You:        Deployment is failing because containers are confusing
+DailyBrief: ✅ Saved as task.
+            📝 Fix deployment containers
+
+            💡 Memory connection
+            10 days ago you mentioned:
+            "Need to learn Docker for my project deployment"
+
+            This looks related to what you're running into now.
+
+You:        brief me
+DailyBrief: 📋 DailyBrief
+
+            🔥 Tasks
+            1. Fix deployment containers
+            2. Prepare presentation tomorrow
+
+            📝 Notes
+            3. Learn Docker for deployment
+
+You:        1 done
+DailyBrief: ✅ Completed:
+            Fix deployment containers
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+---
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## Tech Stack
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+| Layer | Choice |
+|---|---|
+| Framework | Next.js 16 (App Router) |
+| Language | TypeScript |
+| Database | PostgreSQL ([Neon](https://neon.tech)) |
+| ORM | Drizzle ORM |
+| Vector Search | pgvector |
+| Classification | Gemini 2.5 Flash |
+| Embeddings | Gemini Embedding API (`text-embedding-004`, 768-dim) |
+| Messaging | Twilio WhatsApp Sandbox |
+| Validation | Zod |
 
-## Learn More
+---
 
-To learn more about Next.js, take a look at the following resources:
+## Architecture
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+DailyBrief follows a strict layered architecture every request flows through the same predictable path, with each layer owning exactly one responsibility.
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+```mermaid
+flowchart TD
+    A[WhatsApp Message] --> B[Twilio]
+    B --> C["Webhook Route (HTTP only)"]
+    C --> D["Parser (Twilio payload to internal object)"]
+    D --> E["Command Router"]
 
-## Deploy on Vercel
+    E -->|"brief me"| F[Brief Service]
+    E -->|"N done"| G[Actions Service]
+    E -->|otherwise| H[Ingestion Service]
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+    H --> I[Classification: Gemini]
+    I --> J{remember?}
+    J -->|yes| K[Embedding: Gemini]
+    J -->|no| L[Save Message]
+    K --> L
+    L --> M[Memory Resurfacing]
+    M --> N["Vector Similarity: pgvector"]
+    N --> O["LLM Relevance Check: Gemini"]
+    O --> P[WhatsApp Reply]
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+    F --> Q[("Postgres: briefs + brief_items")]
+    Q --> P
+    G --> R[("Postgres: messages.status")]
+    R --> P
+
+    style C fill:#e8f0fe
+    style D fill:#e8f0fe
+    style E fill:#fff4e5
+    style H fill:#e6f4ea
+    style F fill:#e6f4ea
+    style G fill:#e6f4ea
+```
+
+### Layer responsibilities
+
+| Layer | Responsibility | Never does |
+|---|---|---|
+| **Route** | Parses the HTTP request, delegates, returns TwiML | Business logic, DB access |
+| **Parser** | Converts Twilio's form-encoded payload into a typed internal object | Anything beyond shaping data |
+| **Command Router** | Detects `brief me` / `N done` / plain message and dispatches | Executing the logic itself |
+| **Application Services** (`ingest.ts`, `generate.ts`, `resolve.ts`) | Orchestrates the pipeline, calls domain services and repositories in order | Raw SQL, raw HTTP parsing |
+| **Domain Services** (Gemini, Twilio clients) | Wraps external API calls | App-specific business rules |
+| **Repositories** | Pure database queries | Any decision-making |
+
+---
+
+## Folder Structure
+
+```
+dailybrief/
+├── app/
+│   └── api/
+│       └── webhook/
+│           └── whatsapp/
+│               └── route.ts          # Twilio webhook — HTTP only
+│
+├── lib/
+│   ├── config/
+│   │   └── env.ts                    # Zod-validated environment variables
+│   │
+│   ├── db/
+│   │   ├── schema.ts                 # Drizzle schema (users, messages, briefs, brief_items)
+│   │   ├── client.ts                 # Neon + Drizzle instance
+│   │   └── migrations/
+│   │
+│   ├── repositories/                 # Pure DB queries — no business logic
+│   │   ├── users.repo.ts
+│   │   ├── messages.repo.ts
+│   │   └── briefs.repo.ts
+│   │
+│   └── modules/
+│       ├── gemini/                   # Shared Gemini client
+│       │
+│       ├── classification/
+│       │   ├── classify.ts           # Gemini call → structured JSON
+│       │   ├── prompts.ts
+│       │   └── schema.ts             # Zod schema for classification output
+│       │
+│       ├── memory/
+│       │   ├── embed.ts              # Gemini embedding call
+│       │   ├── resurface.ts          # Similarity search + relevance orchestration
+│       │   ├── relevance.ts          # LLM relevance check (Zod-validated)
+│       │   ├── prompts.ts
+│       │   └── schema.ts
+│       │
+│       ├── brief/
+│       │   ├── generate.ts           # Application service — builds + saves + sends brief
+│       │   └── formatter.ts          # Pure text formatting, no DB or business logic
+│       │
+│       ├── commands/
+│       │   ├── types.ts              # Command discriminated union
+│       │   ├── detect.ts             # Detects BRIEF / DONE / NONE
+│       │   └── router.ts             # Dispatches to the right service
+│       │
+│       ├── actions/
+│       │   └── resolve.ts            # Resolves "N done" against a pinned brief snapshot
+│       │
+│       ├── ingestion/
+│       │   └── ingest.ts             # Application service — classify → embed → save → resurface
+│       │
+│       └── whatsapp/
+│           ├── client.ts             # Twilio send wrapper
+│           ├── parser.ts             # Twilio payload → WhatsAppIncomingMessage
+│           └── types.ts
+│
+├── scripts/
+│   └── seedDemoData.ts               # Seeds realistic historical memories for the demo
+│
+├── drizzle.config.ts
+├── .env
+└── package.json
+```
+
+---
+
+## Database Schema
+
+```mermaid
+erDiagram
+    users ||--o{ messages : sends
+    users ||--o{ briefs : receives
+    briefs ||--o{ brief_items : contains
+    brief_items }o--|| messages : references
+
+    users {
+        uuid id PK
+        text phone UK
+        timestamp created_at
+    }
+
+    messages {
+        uuid id PK
+        uuid user_id FK
+        text raw_text
+        text category
+        text priority
+        timestamp extracted_date
+        boolean remember
+        text status
+        vector embedding
+        timestamp created_at
+        timestamp updated_at
+    }
+
+    briefs {
+        uuid id PK
+        uuid user_id FK
+        text content
+        timestamp sent_at
+    }
+
+    brief_items {
+        uuid id PK
+        uuid brief_id FK
+        uuid message_id FK
+        integer position
+    }
+```
+
+**`messages`** is the core table — every captured thought, its classification, and (when `remember = true`) its embedding vector for similarity search.
+
+**`briefs` + `brief_items`** exist specifically to make the `N done` command reliable. Rather than recomputing "the user's open items" live every time someone replies with a number — which breaks the moment a new message arrives between the brief and the reply — each brief is saved as a snapshot, with every item's exact position pinned in `brief_items`. `"1 done"` always resolves against what was actually shown, never a live guess.
+
+---
+
+## AI Pipeline
+
+DailyBrief uses Gemini for three distinct jobs, each with its own prompt and its own Zod schema:
+
+```mermaid
+flowchart LR
+    A[Raw Message] --> B["Classification: Gemini 2.5 Flash"]
+    B --> C{"remember = true?"}
+    C -->|yes| D["Embedding: text-embedding-004"]
+    C -->|no| E[Store, no vector]
+    D --> F["pgvector similarity search (cosine distance)"]
+    F --> G{"distance below threshold?"}
+    G -->|no| H[Skip — not worth an LLM call]
+    G -->|yes| I["Relevance Check: Gemini 2.5 Flash"]
+    I --> J{relevant?}
+    J -->|yes| K[Surface memory in reply]
+    J -->|no| L[Try next candidate]
+```
+
+1. **Classification** — every message is sent to Gemini with a strict prompt requesting JSON only (`responseMimeType: "application/json"`), then validated with Zod before anything touches the database. A malformed AI response is caught at the boundary, not three layers deep.
+2. **Embedding** — only messages classified with `remember: true` are embedded. This keeps the vector index meaningful (no noise from "buy milk") and avoids unnecessary API calls.
+3. **Two-stage memory retrieval** — vector similarity alone isn't trustworthy; two messages can share vocabulary without being meaningfully related. So resurfacing is deliberately two-stage: pgvector narrows candidates fast and cheaply, then a second Gemini call makes the actual judgment call on relevance before anything is shown to the user. A distance threshold gates which candidates even reach that second call, keeping latency and cost down.
+
+---
+
+## Design Decisions
+
+**Repository pattern, strictly enforced.** Every DB query lives in `lib/repositories/`. Services never write raw Drizzle queries inline. This made every layer independently testable during development — each repository function was verified against Neon directly before being wired into a service.
+
+**Thin route handlers.** `route.ts` does exactly two things: parse the incoming payload and call the router. All decision-making lives in `lib/modules/`. This kept the HTTP layer trivial to reason about even as the pipeline underneath grew from a single insert to a five-stage AI pipeline.
+
+**Shared Gemini client.** Classification and relevance-checking both go through the same client wrapper, so retries, error handling, and JSON-mode configuration live in one place instead of being duplicated per feature.
+
+**Zod validation on every AI JSON output.** LLMs occasionally return malformed or unexpected shapes. Every Gemini JSON response — classification and relevance alike — is parsed through a Zod schema before it's trusted, so a bad AI response fails loudly and locally instead of corrupting data three steps downstream.
+
+**Brief snapshots instead of live indexing.** Numbering a list live from "current open items" seems simpler, but it breaks the moment state changes between showing the list and acting on it. Pinning positions in `brief_items` at brief-generation time trades a small amount of extra schema for numbering that's always correct.
+
+**Embeddings gated on `remember = true`.** Not every message deserves to become long-term context. Gating embedding generation behind an explicit AI-classified flag keeps the memory index signal-heavy and avoids paying for vectors that would never usefully surface.
+
+**Two-stage retrieval over pure vector search.** Cosine similarity is fast but semantically shallow — it flags shared vocabulary, not shared meaning. Layering an LLM relevance check on top of a distance-gated candidate set keeps resurfaced memories genuinely useful rather than just "keyword-adjacent."
+
+---
+
+## Local Setup
+
+### Prerequisites
+- Node.js 20+
+- A [Neon](https://neon.tech) Postgres project with the `pgvector` extension enabled
+- A [Twilio](https://www.twilio.com/whatsapp) account with WhatsApp Sandbox access
+- A [Gemini API key](https://ai.google.dev/)
+- [ngrok](https://ngrok.com/) (or similar) for exposing your local server to Twilio
+
+### Install
+
+```bash
+git clone https://github.com/<your-username>/dailybrief.git
+cd dailybrief
+npm install
+```
+
+### Enable pgvector
+
+In the Neon SQL editor:
+
+```sql
+CREATE EXTENSION IF NOT EXISTS vector;
+```
+
+### Push the schema
+
+```bash
+npx drizzle-kit push
+```
+
+---
+
+## Environment Variables
+
+Create a `.env` file in the project root:
+
+```env
+DATABASE_URL=postgresql://<user>:<password>@<host>/<db>?sslmode=require
+
+GEMINI_API_KEY=your_gemini_api_key
+
+TWILIO_ACCOUNT_SID=your_twilio_account_sid
+TWILIO_AUTH_TOKEN=your_twilio_auth_token
+TWILIO_WHATSAPP_NUMBER=whatsapp:+14155238886
+```
+
+All variables are validated at startup via `lib/config/env.ts` — the app fails fast with a clear error if any are missing, rather than failing confusingly on the first webhook call.
+
+---
+
+## Running Locally
+
+```bash
+# Start the dev server
+npm run dev
+
+# In a separate terminal, expose it to the internet
+ngrok http 3000
+```
+
+Copy the ngrok HTTPS URL and set it as your Twilio Sandbox webhook:
+
+```
+https://<your-ngrok-subdomain>.ngrok-free.app/api/webhook/whatsapp
+```
+
+Join the Twilio Sandbox from your WhatsApp by sending the join code shown in your Twilio console, then message the Sandbox number directly.
+
+### Seed demo data (optional, recommended before a demo)
+
+```bash
+npx tsx scripts/seedDemoData.ts
+```
+
+This populates realistic, backdated memories so the resurfacing feature has something to connect to without needing days of organic history.
+
+---
+
+## Future Improvements
+
+- Multi-user authentication (currently single WhatsApp number per demo)
+- Scheduled evening briefs via Vercel Cron
+- Voice note transcription and ingestion
+- Snooze / reschedule actions beyond "done"
+- Configurable relevance-check strictness per user
+- Web dashboard as an alternative to WhatsApp-only interaction
+
+---
+
+## Screenshots
+
+> _Add screenshots of real WhatsApp conversations here — ingestion confirmation, a daily brief, and a memory resurfacing moment work best._
+
+`![Ingestion confirmation](./docs/screenshots/ingestion.png)`
+
+`![Daily brief](./docs/screenshots/brief.png)`
+
+`![Memory resurfacing](./docs/screenshots/resurfacing.png)`
+
+---
+
+## Demo
+
+> _Add a link to your demo video here._
+
+**3-minute demo flow:**
+1. Send a message worth remembering — get an instant, structured confirmation
+2. Send `brief me` — see everything open, organized by category
+3. Send a related message days (or, in the seed data, "days") later — watch DailyBrief surface the earlier memory unprompted
+4. Send `N done` — resolve an item with zero ambiguity, even with new messages in between
+
+---
+
+<p align="center">Built in 4 days for a hackathon. Turns out remembering things is harder than it sounds.</p>
