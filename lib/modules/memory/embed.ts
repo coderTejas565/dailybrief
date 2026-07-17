@@ -1,9 +1,6 @@
 import { gemini } from "@/lib/modules/gemini/client";
 
-export async function embedText(
-  text: string
-): Promise<number[]> {
-
+export async function embedText(text: string): Promise<number[]> {
   const response = await gemini.models.embedContent({
     model: "gemini-embedding-001",
     contents: text,
@@ -12,16 +9,11 @@ export async function embedText(
     },
   });
 
-
   const values = response.embeddings?.[0]?.values;
 
-
   if (!values || values.length !== 768) {
-    throw new Error(
-      `Invalid embedding size: ${values?.length ?? "none"}`
-    );
+    throw new Error(`Invalid embedding size: ${values?.length ?? "none"}`);
   }
-
 
   return values;
 }

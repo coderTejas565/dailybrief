@@ -3,7 +3,7 @@ import { messages } from "@/lib/db/schema";
 
 import type { ClassificationResult } from "@/lib/modules/classification/classify";
 
-import { and, eq, desc, ne } from "drizzle-orm";
+import { and, eq, desc, ne, sql } from "drizzle-orm";
 
 type CreateMessageInput = {
   userId: string;
@@ -12,7 +12,12 @@ type CreateMessageInput = {
   embedding?: number[];
 };
 
-export async function createMessage({ userId, rawText, classification, embedding }: CreateMessageInput) {
+export async function createMessage({
+  userId,
+  rawText,
+  classification,
+  embedding,
+}: CreateMessageInput) {
   const [message] = await db
     .insert(messages)
     .values({
@@ -63,4 +68,34 @@ export async function getMessageById(id: string) {
   return db.query.messages.findFirst({
     where: eq(messages.id, id),
   });
+}
+
+export async function getSimilarMessages(
+  userId: string,
+  embedding: number[],
+  excludeId: string,
+  limit = 3
+) {
+  const vectorLiteral = `[${embedding.join(",")}]`;
+
+
+  return db.execute(sql`
+    SELECT
+      id,
+      raw_text,
+      category,
+      created_at,
+      embedding <=> ${vectorLiteral}::vector AS distance
+
+    FROM messages
+
+    WHERE user_id = ${userId}
+      AND id != ${excludeId}
+      AND remember = true
+      AND embedding IS NOT NULL
+
+    ORDER BY embedding <=> ${vectorLiteral}::vector
+
+    LIMIT ${limit}
+  `);
 }

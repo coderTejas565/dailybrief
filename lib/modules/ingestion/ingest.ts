@@ -17,16 +17,14 @@ export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
   // 2. Classify the message
   const classification = await classifyMessage(body);
 
-  const memoryEmbedding  = classification.remember
-  ? await embedText(body)
-  : undefined;
+  const memoryEmbedding = classification.remember ? await embedText(body) : undefined;
 
   // 3. Save it
   const message = await createMessage({
     userId: user.id,
     rawText: body,
     classification,
-    embedding: memoryEmbedding 
+    embedding: memoryEmbedding,
   });
 
   // 4. Build confirmation reply
