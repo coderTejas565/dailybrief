@@ -8,35 +8,29 @@ type BuildConfirmationMessageInput = {
 
 export function buildConfirmationMessage({
   classification,
-  resurfacedMemory
+  resurfacedMemory,
 }: BuildConfirmationMessageInput): string {
   let message = `✅ Saved as ${classification.category.toLowerCase()}.\n\n`;
 
   message += `📝 ${classification.title}`;
 
   if (classification.date) {
-  message += `\n📅 ${classification.date}`;
-}
+    message += `\n📅 ${classification.date}`;
+  }
 
-if (resurfacedMemory) {
-  const daysAgo = Math.round(
-    (Date.now() -
-      resurfacedMemory.createdAt.getTime()) /
-      (1000 * 60 * 60 * 24),
-  );
+  if (resurfacedMemory) {
+    const daysAgo = Math.round(
+      (Date.now() - resurfacedMemory.createdAt.getTime()) / (1000 * 60 * 60 * 24),
+    );
 
-  message +=
-    `\n\n💡 Memory connection`;
+    message += `\n\n💡 Memory connection`;
 
-  message +=
-    `\n${daysAgo} day${daysAgo === 1 ? "" : "s"} ago you mentioned:`;
+    message += `\n${daysAgo} day${daysAgo === 1 ? "" : "s"} ago you mentioned:`;
 
-  message +=
-    `\n"${resurfacedMemory.rawText}"`;
+    message += `\n"${resurfacedMemory.rawText}"`;
 
-  message +=
-    `\n\n${resurfacedMemory.reason}`;
-}
+    message += `\n\n${resurfacedMemory.reason}`;
+  }
 
-return message;
+  return message;
 }

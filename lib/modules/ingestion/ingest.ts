@@ -20,18 +20,15 @@ export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
 
   let memoryEmbedding: number[] | undefined;
 
-if (classification.remember) {
-  try {
-    memoryEmbedding = await embedText(body);
-  } catch (error) {
-    console.error(
-      "Embedding generation failed:",
-      error
-    );
+  if (classification.remember) {
+    try {
+      memoryEmbedding = await embedText(body);
+    } catch (error) {
+      console.error("Embedding generation failed:", error);
 
-    memoryEmbedding = undefined;
+      memoryEmbedding = undefined;
+    }
   }
-}
 
   // 3. Save it
   const message = await createMessage({
@@ -43,20 +40,15 @@ if (classification.remember) {
 
   let resurfacedMemory = null;
 
-if (classification.remember && memoryEmbedding) {
-  resurfacedMemory = await findResurfacedMemory(
-    user.id,
-    body,
-    memoryEmbedding,
-    message.id,
-  );
-}
+  if (classification.remember && memoryEmbedding) {
+    resurfacedMemory = await findResurfacedMemory(user.id, body, memoryEmbedding, message.id);
+  }
 
   // 4. Build confirmation reply
- const reply = buildConfirmationMessage({
-  classification,
-  resurfacedMemory,
-});
+  const reply = buildConfirmationMessage({
+    classification,
+    resurfacedMemory,
+  });
 
   // 5. Send reply
   await sendWhatsApp(from, reply);

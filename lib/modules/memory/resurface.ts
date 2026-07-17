@@ -8,6 +8,8 @@ export type ResurfacedMemory = {
   reason: string;
 };
 
+const MEMORY_DISTANCE_THRESHOLD = 0.45;
+
 export async function findResurfacedMemory(
   userId: string,
   currentMessage: string,
@@ -17,6 +19,10 @@ export async function findResurfacedMemory(
   const candidates = await getSimilarMessages(userId, embedding, currentMessageId, 3);
 
   for (const candidate of candidates) {
+    if (candidate.distance == null || candidate.distance > MEMORY_DISTANCE_THRESHOLD) {
+      continue;
+    }
+
     try {
       const relevance = await checkMemoryRelevance(currentMessage, candidate.rawText);
 
@@ -26,7 +32,7 @@ export async function findResurfacedMemory(
 
       return {
         rawText: candidate.rawText,
-        createdAt: candidate.createdAt,
+        createdAt: new Date(candidate.createdAt),
         reason: relevance.reason,
       };
     } catch (error) {
