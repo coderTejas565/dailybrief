@@ -5,6 +5,7 @@ import { buildConfirmationMessage } from "@/lib/modules/whatsapp/formatter";
 
 import { findOrCreateUser } from "@/lib/repositories/users.repo";
 import { createMessage } from "@/lib/repositories/messages.repo";
+import { findResurfacedMemory } from "@/lib/modules/memory/resurface";
 
 import type { WhatsAppIncomingMessage } from "@/lib/modules/whatsapp/types";
 
@@ -27,10 +28,22 @@ export async function ingestMessage({ from, body }: WhatsAppIncomingMessage) {
     embedding: memoryEmbedding,
   });
 
+  let resurfacedMemory = null;
+
+if (classification.remember && memoryEmbedding) {
+  resurfacedMemory = await findResurfacedMemory(
+    user.id,
+    body,
+    memoryEmbedding,
+    message.id,
+  );
+}
+
   // 4. Build confirmation reply
-  const reply = buildConfirmationMessage({
-    classification,
-  });
+ const reply = buildConfirmationMessage({
+  classification,
+  resurfacedMemory,
+});
 
   // 5. Send reply
   await sendWhatsApp(from, reply);
