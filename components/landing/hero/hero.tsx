@@ -1,58 +1,156 @@
 "use client";
 
 import { motion } from "framer-motion";
+import { ArrowRight } from "lucide-react";
+
 import { Button } from "@/components/ui/button";
+
 import HeroBackground from "./hero-background";
 import WhatsAppPreview from "./whatsapp-preview";
 import FloatingMemory from "./floating-memory";
-import { ArrowRight } from "lucide-react";
 
-const headline = ["Your WhatsApp", "already knows", "your life."];
+const headline = ["You don't have a", "forgetting problem.", "You have a remembering problem."];
 
 export default function Hero() {
   return (
     <section
       className="
-relative
-min-h-screen
-overflow-hidden
-px-6
-pt-32
-pb-20
-"
+      relative
+      min-h-[100vh]
+      overflow-hidden
+      px-6
+      pt-32
+      pb-16
+      "
     >
       <HeroBackground />
 
       <div
         className="
-relative
-mx-auto
-grid
-max-w-7xl
-items-center
-gap-20
-lg:grid-cols-2
-"
+        relative
+        mx-auto
+        grid
+        max-w-7xl
+        items-center
+        gap-12
+        lg:grid-cols-2
+        "
       >
         {/* LEFT */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 50,
+            y: 35,
           }}
-
           animate={{
             opacity: 1,
             y: 0,
           }}
-
           transition={{
             duration: 1,
             ease: [0.16, 1, 0.3, 1],
           }}
         >
           <motion.p
+            initial={{
+              opacity: 0,
+              y: 15,
+            }}
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+            transition={{
+              delay: 0.2,
+            }}
+            className="
+            mb-5
+            font-mono
+            text-xs
+            tracking-[0.3em]
+            text-(--primary)
+            "
+          >
+            AI MEMORY ASSISTANT
+          </motion.p>
+
+          <h1
+            className="
+            max-w-3xl
+            font-heading
+            text-5xl
+            font-bold
+            leading-[1.05]
+            tracking-tight
+            sm:text-6xl
+            lg:text-[4.1rem]
+            "
+          >
+            {headline.map((line, index) => (
+              <motion.span
+                key={line}
+
+                initial={{
+                  opacity: 0,
+                  y: 60,
+                  filter: "blur(10px)",
+                }}
+
+                animate={{
+                  opacity: 1,
+                  y: 0,
+                  filter: "blur(0px)",
+                }}
+
+                transition={{
+                  duration: 0.8,
+                  delay: 0.3 + index * 0.12,
+                  ease: [0.16, 1, 0.3, 1],
+                }}
+
+                className="block"
+              >
+                {index === 2 ? (
+                  <span className="text-(--primary)">You have a remembering problem.</span>
+                ) : (
+                  line
+                )}
+              </motion.span>
+            ))}
+          </h1>
+
+          <motion.p
+            initial={{
+              opacity: 0,
+              y: 25,
+            }}
+
+            animate={{
+              opacity: 1,
+              y: 0,
+            }}
+
+            transition={{
+              delay: 0.8,
+            }}
+
+            className="
+            mt-5
+            max-w-xl
+            text-base
+            leading-relaxed
+            text-muted-foreground
+            md:text-lg
+            "
+          >
+            DailyBrief captures your WhatsApp thoughts, turns them into tasks and memories, and
+            brings them back when they matter.
+          </motion.p>
+
+          {/* CTA */}
+
+          <motion.div
             initial={{
               opacity: 0,
               y: 20,
@@ -64,128 +162,19 @@ lg:grid-cols-2
             }}
 
             transition={{
-              delay: 0.2,
+              delay: 1,
             }}
 
             className="
-mb-6
-font-mono
-text-sm
-tracking-[0.25em]
-text-(--primary)
-"
-          >
-            WHATSAPP MEMORY LAYER
-          </motion.p>
-
-          {/* Animated headline */}
-
-          <h1
-            className="
-max-w-3xl
-font-heading
-text-5xl
-font-bold
-leading-[1.05]
-tracking-tight
-sm:text-6xl
-lg:text-7xl
-"
-          >
-            {headline.map((line, index) => (
-              <motion.span
-                key={line}
-
-                initial={{
-                  opacity: 0,
-                  y: 80,
-                  filter: "blur(10px)",
-                }}
-
-                animate={{
-                  opacity: 1,
-                  y: 0,
-                  filter: "blur(0px)",
-                }}
-
-                transition={{
-                  duration: 0.9,
-
-                  delay: 0.35 + index * 0.15,
-
-                  ease: [0.16, 1, 0.3, 1],
-                }}
-
-                className="
-block
-"
-              >
-                {index === 2 ? (
-                  <>
-                    <span className="text-(--primary)">your life.</span>
-                  </>
-                ) : (
-                  line
-                )}
-              </motion.span>
-            ))}
-          </h1>
-
-          <motion.p
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-
-            transition={{
-              delay: 0.9,
-              duration: 0.8,
-            }}
-
-            className="
-mt-7
-max-w-xl
-text-lg
-leading-relaxed
-text-muted-foreground
-"
-          >
-            DailyBrief turns your everyday conversations into tasks, reminders, and memories — so
-            important things return when they matter.
-          </motion.p>
-
-          {/* CTA */}
-
-          <motion.div
-            initial={{
-              opacity: 0,
-              y: 30,
-            }}
-
-            animate={{
-              opacity: 1,
-              y: 0,
-            }}
-
-            transition={{
-              delay: 1.1,
-            }}
-
-            className="
-mt-9
-flex
-items-center
-gap-5
-"
+            mt-7
+            flex
+            items-center
+            gap-4
+            "
           >
             <motion.div
               whileHover={{
-                scale: 1.06,
+                scale: 1.05,
               }}
 
               whileTap={{
@@ -194,21 +183,19 @@ gap-5
             >
               <Button
                 className="
-group
-relative
-overflow-hidden
-rounded-full
-bg-(--primary)
-px-8
-py-6
-text-base
-font-semibold
-text-white
-shadow-xl
-"
+                group
+                relative
+                overflow-hidden
+                rounded-full
+                bg-(--primary)
+                px-7
+                py-5
+                text-sm
+                font-semibold
+                text-white
+                shadow-xl
+                "
               >
-                {/* button shine */}
-
                 <motion.span
                   animate={{
                     x: ["-120%", "120%"],
@@ -217,28 +204,33 @@ shadow-xl
                   transition={{
                     duration: 3,
                     repeat: Infinity,
-                    repeatDelay: 2,
+                    repeatDelay: 3,
                   }}
 
                   className="
-absolute
-inset-y-0
-w-20
-rotate-12
-bg-white/30
-"
+                  absolute
+                  inset-y-0
+                  w-16
+                  rotate-12
+                  bg-white/30
+                  "
                 />
 
-                <span className="relative flex items-center">
-                  Start on WhatsApp
+                <span
+                  className="
+                  relative
+                  flex
+                  items-center
+                  "
+                >
+                  Start remembering
                   <ArrowRight
-                    size={18}
-
+                    size={17}
                     className="
-ml-2
-transition-transform
-group-hover:translate-x-1
-"
+                    ml-2
+                    transition-transform
+                    group-hover:translate-x-1
+                    "
                   />
                 </span>
               </Button>
@@ -246,15 +238,15 @@ group-hover:translate-x-1
 
             <p
               className="
-hidden
-text-sm
-text-muted-foreground
-sm:block
-"
+              hidden
+              text-xs
+              text-muted-foreground
+              sm:block
+              "
             >
-              No app.
+              Works inside WhatsApp.
               <br />
-              No setup.
+              Nothing new to learn.
             </p>
           </motion.div>
         </motion.div>
@@ -264,8 +256,8 @@ sm:block
         <motion.div
           initial={{
             opacity: 0,
-            scale: 0.85,
-            x: 80,
+            scale: 0.88,
+            x: 60,
           }}
 
           animate={{
@@ -275,20 +267,18 @@ sm:block
           }}
 
           transition={{
-            duration: 1.2,
-
-            delay: 0.5,
-
+            duration: 1,
+            delay: 0.4,
             ease: [0.16, 1, 0.3, 1],
           }}
 
           className="
-relative
-flex
-justify-center
-"
+          relative
+          flex
+          justify-center
+          "
         >
-          {/* ambient rotation glow */}
+          {/* Smaller orbit */}
 
           <motion.div
             animate={{
@@ -296,42 +286,34 @@ justify-center
             }}
 
             transition={{
-              duration: 50,
+              duration: 60,
               repeat: Infinity,
               ease: "linear",
             }}
 
             className="
-absolute
-h-[500px]
-w-[500px]
-rounded-full
-border
-border-(--highlight)
-opacity-30
-"
+            absolute
+            h-[360px]
+            w-[360px]
+            rounded-full
+            border
+            border-(--highlight)
+            opacity-30
+            "
           />
 
           <FloatingMemory />
 
-          <WhatsAppPreview />
+          <div className="scale-[0.92]">
+            <WhatsAppPreview />
+          </div>
 
-          {/* Task card */}
+          {/* Memory saved card */}
 
           <motion.div
-            initial={{
-              opacity: 0,
-              scale: 0.8,
-            }}
-
             animate={{
-              y: [0, -16, 0],
+              y: [0, -10, 0],
               rotate: [-1, 1, -1],
-              filter: [
-                "drop-shadow(0px 20px 30px rgba(25,43,54,0.08))",
-                "drop-shadow(0px 35px 45px rgba(25,43,54,0.14))",
-                "drop-shadow(0px 20px 30px rgba(25,43,54,0.08))",
-              ],
             }}
 
             transition={{
@@ -341,35 +323,35 @@ opacity-30
             }}
 
             className="
-absolute
--bottom-5
--left-8
-rounded-2xl
-border
-border-white/70
-bg-white/70
-px-5
-py-4
-shadow-xl
-backdrop-blur-xl
-"
+            absolute
+            -bottom-3
+            -left-4
+            rounded-2xl
+            border
+            border-white/70
+            bg-white/70
+            px-4
+            py-3
+            shadow-xl
+            backdrop-blur-xl
+            "
           >
             <p
               className="
-font-mono
-text-xs
-text-(--primary)
-"
+              font-mono
+              text-[10px]
+              text-(--primary)
+              "
             >
-              TASK SAVED
+              MEMORY SAVED
             </p>
 
             <p
               className="
-mt-1
-text-sm
-font-medium
-"
+              mt-1
+              text-xs
+              font-medium
+              "
             >
               API docs
               <br />
@@ -378,59 +360,6 @@ font-medium
           </motion.div>
         </motion.div>
       </div>
-
-      {/* Scroll */}
-
-      <motion.div
-        initial={{
-          opacity: 0,
-        }}
-
-        animate={{
-          opacity: 1,
-        }}
-
-        transition={{
-          delay: 2,
-        }}
-
-        className="
-absolute
-bottom-8
-left-1/2
-hidden
--translate-x-1/2
-md:block
-"
-      >
-        <div
-          className="
-flex
-flex-col
-items-center
-gap-3
-text-xs
-text-muted-foreground
-"
-        >
-          Scroll
-          <motion.div
-            animate={{
-              height: [10, 35, 10],
-            }}
-
-            transition={{
-              duration: 2,
-              repeat: Infinity,
-            }}
-
-            className="
-w-px
-bg-(--primary)
-"
-          />
-        </div>
-      </motion.div>
     </section>
   );
 }

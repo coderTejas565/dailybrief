@@ -8,16 +8,14 @@ export default function FloatingMemory() {
     <motion.div
       initial={{
         opacity: 0,
-        y: 40,
-        scale: 0.9,
-        rotate: 5,
+        y: 30,
+        scale: 0.92,
       }}
 
       animate={{
         opacity: 1,
-        y: [0, -14, 0],
+        y: [0, -12, 0],
         scale: 1,
-        rotate: [0, -2, 0],
       }}
 
       transition={{
@@ -33,12 +31,6 @@ export default function FloatingMemory() {
         },
 
         y: {
-          duration: 7,
-          repeat: Infinity,
-          ease: "easeInOut",
-        },
-
-        rotate: {
           duration: 8,
           repeat: Infinity,
           ease: "easeInOut",
@@ -46,26 +38,27 @@ export default function FloatingMemory() {
       }}
 
       whileHover={{
-        scale: 1.05,
-        y: -20,
+        y: -18,
+        scale: 1.04,
       }}
 
       className="
-      group
-      absolute
-      -right-14
-      top-8
-      overflow-hidden
-      rounded-3xl
-      border
-      border-white/70
-      bg-white/60
-      p-5
-      shadow-[0_30px_80px_rgba(25,43,54,0.12)]
-      backdrop-blur-2xl
-      "
+group
+absolute
+-right-6
+top-8
+lg:-right-14
+overflow-hidden
+rounded-[28px]
+border
+border-white/70
+bg-white/55
+p-4
+shadow-[0_30px_90px_rgba(25,43,54,.14)]
+backdrop-blur-3xl
+"
     >
-      {/* Glass reflection */}
+      {/* moving glass light */}
 
       <motion.div
         animate={{
@@ -73,75 +66,71 @@ export default function FloatingMemory() {
         }}
 
         transition={{
-          duration: 4,
+          duration: 5,
           repeat: Infinity,
-          repeatDelay: 3,
-          ease: "easeInOut",
+          repeatDelay: 5,
         }}
 
         className="
-        absolute
-        inset-y-0
-        w-20
-        rotate-12
-        bg-white/40
-        blur-xl
-        "
+absolute
+inset-y-0
+w-16
+rotate-12
+bg-white/50
+blur-xl
+"
       />
 
-      {/* Ambient glow */}
+      {/* glow */}
 
       <motion.div
         animate={{
-          opacity: [0.2, 0.5, 0.2],
-          scale: [1, 1.2, 1],
+          opacity: [0.2, 0.45, 0.2],
         }}
 
         transition={{
-          duration: 4,
+          duration: 5,
           repeat: Infinity,
-          ease: "easeInOut",
         }}
 
         className="
-        absolute
-        -inset-2
-        -z-10
-        rounded-3xl
-        bg-(--highlight)
-        blur-2xl
-        "
+absolute
+-inset-5
+-z-10
+rounded-full
+bg-(--highlight)
+blur-3xl
+"
       />
 
       <div className="relative">
         <div
           className="
-          flex
-          items-center
-          gap-3
-          "
+flex
+items-center
+gap-3
+"
         >
           <motion.div
             animate={{
-              scale: [1, 1.1, 1],
+              scale: [1, 1.08, 1],
             }}
 
             transition={{
-              duration: 3,
+              duration: 4,
               repeat: Infinity,
-              ease: "easeInOut",
             }}
 
             className="
-            flex
-            h-10
-            w-10
-            items-center
-            justify-center
-            rounded-2xl
-            bg-(--highlight)
-            text-(--primary)
-            "
+flex
+h-10
+w-10
+items-center
+justify-center
+rounded-xl
+bg-(--highlight)
+text-(--primary)
+"
           >
             <Brain size={19} />
           </motion.div>
@@ -149,50 +138,56 @@ export default function FloatingMemory() {
           <div>
             <p
               className="
-              text-sm
-              font-semibold
-              "
+text-sm
+font-semibold
+"
             >
-              Memory found
+              Memory resurfaced
             </p>
 
             <p
               className="
-              text-[11px]
-              text-muted-foreground
-              "
+text-[11px]
+text-muted-foreground
+"
             >
-              Connected instantly
+              From your conversations
             </p>
           </div>
         </div>
 
+        {/* memory */}
+
         <div
           className="
-          mt-4
-          rounded-2xl
-          bg-white/60
-          px-4
-          py-3
-          "
+mt-4
+rounded-2xl
+border
+border-white
+bg-white/70
+px-4
+py-3
+shadow-inner
+"
         >
           <p
             className="
-            text-xs
-            text-muted-foreground
-            "
+text-[11px]
+text-muted-foreground
+"
           >
-            Docker discussion
+            10 days ago
           </p>
 
           <p
             className="
-            mt-1
-            text-sm
-            font-medium
-            "
+mt-1
+text-sm
+font-medium
+leading-snug
+"
           >
-            10 days ago
+            You discussed Docker deployment
           </p>
         </div>
       </div>

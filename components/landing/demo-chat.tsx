@@ -8,112 +8,99 @@ export default function DemoChat() {
     <section
       id="demo"
       className="
-relative
-overflow-hidden
-px-6
-py-32
-"
+      relative
+      overflow-hidden
+      px-6
+      py-16
+      "
     >
       {/* Aurora */}
 
       <motion.div
         animate={{
           scale: [1, 1.15, 1],
-          opacity: [0.2, 0.4, 0.2],
+          opacity: [0.15, 0.35, 0.15],
         }}
-
         transition={{
-          duration: 8,
+          duration: 10,
           repeat: Infinity,
         }}
-
         className="
-absolute
-left-1/2
-top-20
-h-[500px]
-w-[500px]
--translate-x-1/2
-rounded-full
-bg-(--highlight)
-blur-[140px]
-"
+        absolute
+        left-1/2
+        top-20
+        h-[420px]
+        w-[420px]
+        -translate-x-1/2
+        rounded-full
+        bg-(--highlight)
+        blur-[140px]
+        "
       />
 
-      <div
-        className="
-relative
-mx-auto
-max-w-6xl
-"
-      >
+      <div className="relative mx-auto max-w-6xl">
         {/* Heading */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 40,
+            y: 30,
           }}
-
           whileInView={{
             opacity: 1,
             y: 0,
           }}
-
           viewport={{
             once: true,
           }}
-
           transition={{
-            duration: 0.8,
+            duration: 0.7,
           }}
-
-          className="
-text-center
-"
+          className="text-center"
         >
           <p
             className="
-font-mono
-text-sm
-tracking-[0.3em]
-text-(--primary)
-"
+            font-mono
+            text-xs
+            tracking-[.3em]
+            text-(--primary)
+            "
           >
             LIVE DEMO
           </p>
 
           <h2
             className="
-mt-5
-font-heading
-text-4xl
-font-bold
-md:text-6xl
-"
+            mt-5
+            font-heading
+            text-4xl
+            font-bold
+            md:text-5xl
+            "
           >
-            A conversation that
+            Your conversations
             <br />
-            <span className="text-(--primary)">remembers.</span>
+            become <span className="text-(--primary)">memories.</span>
           </h2>
 
           <p
             className="
-mt-5
-text-lg
-text-muted-foreground
-"
+            mx-auto
+            mt-5
+            max-w-xl
+            text-muted-foreground
+            "
           >
-            No dashboards. No forms. Just conversations.
+            Watch DailyBrief understand a message, extract meaning, and reconnect past context.
           </p>
         </motion.div>
 
-        {/* Product stage */}
+        {/* Demo stage */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 80,
+            y: 60,
             scale: 0.95,
           }}
 
@@ -128,22 +115,22 @@ text-muted-foreground
           }}
 
           transition={{
-            duration: 1,
+            duration: 0.9,
             ease: [0.16, 1, 0.3, 1],
           }}
 
           className="
-relative
-mx-auto
-mt-16
-max-w-md
-"
+          relative
+          mx-auto
+          mt-14
+          max-w-sm
+          "
         >
-          {/* floating memory bubble */}
+          {/* Floating Memory */}
 
           <motion.div
             animate={{
-              y: [0, -15, 0],
+              y: [0, -14, 0],
               rotate: [0, 2, 0],
             }}
 
@@ -154,60 +141,63 @@ max-w-md
             }}
 
             className="
-absolute
--right-24
-top-20
-hidden
-rounded-3xl
-border
-border-white/70
-bg-white/60
-p-5
-shadow-xl
-backdrop-blur-xl
-md:block
-"
+            absolute
+            -right-28
+            top-24
+            hidden
+            rounded-3xl
+            border
+            border-white/70
+            bg-white/60
+            p-4
+            shadow-xl
+            backdrop-blur-xl
+            md:block
+            "
           >
             <div
               className="
-flex
-items-center
-gap-2
-font-medium
-"
+              flex
+              items-center
+              gap-2
+              text-sm
+              font-semibold
+              "
             >
-              <Brain size={18} className="text-(--primary)" />
-              Memory
+              <Brain size={17} className="text-(--primary)" />
+              Past memory
             </div>
 
             <p
               className="
-mt-2
-text-xs
-text-muted-foreground
-"
+              mt-2
+              text-xs
+              text-muted-foreground
+              "
             >
-              Docker notes
+              API architecture
               <br />2 weeks ago
             </p>
           </motion.div>
 
-          {/* Chat glass */}
+          {/* Glass container */}
 
           <div
             className="
-relative
-overflow-hidden
-rounded-[36px]
-border
-border-white/70
-bg-white/60
-p-4
-shadow-[0_40px_100px_rgba(25,43,54,.15)]
-backdrop-blur-3xl
-"
+            relative
+            overflow-hidden
+            rounded-[38px]
+            border
+            border-white/70
+            bg-gradient-to-br
+            from-white/80
+            to-white/40
+            p-4
+            shadow-[0_40px_120px_rgba(25,43,54,.15)]
+            backdrop-blur-3xl
+            "
           >
-            {/* reflection */}
+            {/* Reflection */}
 
             <motion.div
               animate={{
@@ -221,39 +211,39 @@ backdrop-blur-3xl
               }}
 
               className="
-absolute
-inset-y-0
-w-20
-rotate-12
-bg-white/40
-blur-xl
-"
+              absolute
+              inset-y-0
+              w-24
+              rotate-12
+              bg-white/40
+              blur-xl
+              "
             />
 
             {/* Header */}
 
             <div
               className="
-relative
-flex
-items-center
-gap-3
-border-b
-pb-4
-"
+              relative
+              flex
+              items-center
+              gap-3
+              border-b
+              pb-4
+              "
             >
               <div
                 className="
-flex
-h-11
-w-11
-items-center
-justify-center
-rounded-full
-bg-(--highlight)
-font-bold
-text-(--primary)
-"
+                flex
+                h-10
+                w-10
+                items-center
+                justify-center
+                rounded-full
+                bg-(--highlight)
+                font-bold
+                text-(--primary)
+                "
               >
                 D
               </div>
@@ -261,30 +251,23 @@ text-(--primary)
               <div>
                 <p className="font-semibold">DailyBrief</p>
 
-                <p
-                  className="
-text-xs
-text-muted-foreground
-"
-                >
-                  memory active
-                </p>
+                <p className="text-xs text-(--primary)">online</p>
               </div>
             </div>
 
             <div
               className="
-relative
-space-y-5
-py-6
-"
+              relative
+              space-y-4
+              py-5
+              "
             >
               {/* User */}
 
               <motion.div
                 initial={{
                   opacity: 0,
-                  x: -40,
+                  x: -30,
                 }}
 
                 whileInView={{
@@ -302,29 +285,29 @@ py-6
                 }}
 
                 className="
-max-w-[85%]
-rounded-2xl
-rounded-tl-sm
-bg-white
-p-4
-text-sm
-shadow-sm
-"
+                max-w-[85%]
+                rounded-2xl
+                rounded-tl-sm
+                bg-white
+                p-4
+                text-sm
+                shadow-sm
+                "
               >
-                Need to finish API documentation next week
+                Need to finish API docs next week
                 <p
                   className="
-mt-2
-text-right
-text-xs
-text-gray-400
-"
+                  mt-2
+                  text-right
+                  text-[11px]
+                  text-gray-400
+                  "
                 >
-                  10:42 PM
+                  10:42 PM ✓✓
                 </p>
               </motion.div>
 
-              {/* AI thinking */}
+              {/* Thinking */}
 
               <motion.div
                 initial={{
@@ -342,38 +325,54 @@ text-gray-400
                 }}
 
                 transition={{
-                  delay: 0.7,
+                  delay: 0.8,
                 }}
 
                 className="
-w-fit
-rounded-full
-bg-white
-px-4
-py-3
-shadow-sm
-"
+                flex
+                w-fit
+                items-center
+                gap-2
+                rounded-full
+                bg-white
+                px-4
+                py-2
+                text-xs
+                shadow-sm
+                "
               >
-                <div
-                  className="
-flex
-items-center
-gap-2
-text-xs
-text-muted-foreground
-"
-                >
-                  <Sparkles size={14} className="text-(--primary)" />
-                  Thinking
-                </div>
+                <Sparkles size={13} className="text-(--primary)" />
+                Thinking
+                {[1, 2, 3].map((i) => (
+                  <motion.span
+                    key={i}
+
+                    animate={{
+                      y: [0, -4, 0],
+                    }}
+
+                    transition={{
+                      duration: 0.8,
+                      repeat: Infinity,
+                      delay: i * 0.15,
+                    }}
+
+                    className="
+                    h-1.5
+                    w-1.5
+                    rounded-full
+                    bg-(--primary)
+                    "
+                  />
+                ))}
               </motion.div>
 
-              {/* AI */}
+              {/* AI response */}
 
               <motion.div
                 initial={{
                   opacity: 0,
-                  x: 40,
+                  x: 30,
                 }}
 
                 whileInView={{
@@ -386,49 +385,45 @@ text-muted-foreground
                 }}
 
                 transition={{
-                  delay: 1,
+                  delay: 1.2,
                 }}
 
                 className="
-ml-auto
-max-w-[85%]
-rounded-2xl
-rounded-tr-sm
-bg-(--highlight)
-p-4
-text-sm
-"
+                ml-auto
+                max-w-[85%]
+                rounded-2xl
+                rounded-tr-sm
+                bg-(--highlight)
+                p-4
+                text-sm
+                "
               >
                 Got it. Saved as a task.
                 <div
                   className="
-mt-3
-flex
-items-center
-gap-3
-font-mono
-text-xs
-text-(--primary)
-"
+                  mt-3
+                  flex
+                  items-center
+                  gap-2
+                  font-mono
+                  text-xs
+                  text-(--primary)
+                  "
                 >
-                  TASK NEXT WEEK
+                  TASK
                   <CheckCheck size={14} />
                 </div>
               </motion.div>
 
-              {/* Memory reveal */}
+              {/* Memory line */}
 
               <motion.div
                 initial={{
-                  opacity: 0,
-                  y: 40,
-                  scale: 0.9,
+                  height: 0,
                 }}
 
                 whileInView={{
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
+                  height: 45,
                 }}
 
                 viewport={{
@@ -436,24 +431,54 @@ text-(--primary)
                 }}
 
                 transition={{
-                  delay: 1.5,
+                  delay: 1.7,
+                  duration: 1,
+                }}
+
+                className="
+                mx-auto
+                w-px
+                bg-(--primary)
+                "
+              />
+
+              {/* Memory found */}
+
+              <motion.div
+                initial={{
+                  opacity: 0,
+                  scale: 0.85,
+                  y: 20,
+                }}
+
+                whileInView={{
+                  opacity: 1,
+                  scale: 1,
+                  y: 0,
+                }}
+
+                viewport={{
+                  once: true,
+                }}
+
+                transition={{
+                  delay: 2,
                   type: "spring",
                 }}
 
                 className="
-relative
-rounded-2xl
-border
-border-(--primary)/30
-bg-white
-p-5
-"
+                relative
+                rounded-2xl
+                border
+                border-(--primary)/30
+                bg-white
+                p-4
+                shadow-lg
+                "
               >
-                {/* memory pulse */}
-
                 <motion.div
                   animate={{
-                    scale: [1, 1.4, 1],
+                    scale: [1, 1.3, 1],
                     opacity: [0.2, 0.5, 0.2],
                   }}
 
@@ -463,115 +488,37 @@ p-5
                   }}
 
                   className="
-absolute
-inset-0
-rounded-2xl
-bg-(--highlight)
-blur-xl
-"
+                  absolute
+                  inset-0
+                  rounded-2xl
+                  bg-(--highlight)
+                  blur-xl
+                  "
                 />
 
                 <div
                   className="
-relative
-flex
-items-center
-gap-2
-font-semibold
-"
+                  relative
+                  flex
+                  items-center
+                  gap-2
+                  font-semibold
+                  "
                 >
-                  <Brain className="text-(--primary)" size={18} />
-                  Memory found
+                  <Brain size={17} className="text-(--primary)" />
+                  Memory connected
                 </div>
 
                 <p
                   className="
-relative
-mt-3
-text-sm
-text-muted-foreground
-"
+                  relative
+                  mt-2
+                  text-xs
+                  text-muted-foreground
+                  "
                 >
-                  You discussed API structure in previous project notes.
+                  Connected with your API discussion from 2 weeks ago.
                 </p>
-              </motion.div>
-
-              {/* Memory reveal */}
-
-              <motion.div
-                initial={{
-                  opacity: 0,
-                  y: 40,
-                  scale: 0.9,
-                }}
-
-                whileInView={{
-                  opacity: 1,
-                  y: 0,
-                  scale: 1,
-                }}
-
-                viewport={{
-                  once: true,
-                }}
-
-                transition={{
-                  delay: 1.5,
-                  type: "spring",
-                }}
-
-                className="
-        relative
-        rounded-2xl
-        border
-        border-(--primary)/30
-        bg-white
-        p-5
-        "
-              >
-                <motion.div
-                  animate={{
-                    scale: [1, 1.4, 1],
-                    opacity: [0.2, 0.5, 0.2],
-                  }}
-
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                  }}
-
-                  className="
-          absolute
-          inset-0
-          rounded-2xl
-          bg-(--highlight)
-          blur-xl
-          "
-                />
-
-                <div className="relative">
-                  <div
-                    className="
-          flex
-          items-center
-          gap-2
-          font-semibold
-          "
-                  >
-                    <Brain size={18} className="text-(--primary)" />
-                    Memory found
-                  </div>
-
-                  <p
-                    className="
-            mt-3
-            text-sm
-            text-muted-foreground
-            "
-                  >
-                    You discussed API structure in previous project notes.
-                  </p>
-                </div>
               </motion.div>
             </div>
           </div>

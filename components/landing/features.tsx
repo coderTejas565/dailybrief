@@ -7,26 +7,18 @@ const features = [
   {
     icon: Sparkles,
     title: "Smart classification",
-    description: "Messages automatically become tasks, notes, ideas, or reminders.",
-    tag: "AI UNDERSTANDS",
   },
   {
     icon: CalendarDays,
     title: "Daily brief",
-    description: "Important moments return in one simple summary.",
-    tag: "YOUR MORNING",
   },
   {
     icon: CheckCircle2,
-    title: "Done from WhatsApp",
-    description: "Complete actions without leaving the conversation.",
-    tag: "ONE MESSAGE",
+    title: "Quick actions",
   },
   {
     icon: Mic,
     title: "Voice capture",
-    description: "Speak naturally. DailyBrief remembers.",
-    tag: "VOICE MEMORY",
   },
 ];
 
@@ -38,60 +30,42 @@ export default function Features() {
       relative
       overflow-hidden
       px-6
-      py-24
+      py-16
       "
     >
       {/* Aurora */}
 
       <motion.div
         animate={{
-          scale: [1, 1.15, 1],
+          scale: [1, 1.2, 1],
           opacity: [0.15, 0.3, 0.15],
         }}
 
         transition={{
-          duration: 10,
+          duration: 12,
           repeat: Infinity,
         }}
 
         className="
         absolute
         left-1/2
-        top-20
-        h-[350px]
-        w-[350px]
+        top-10
+        h-[420px]
+        w-[420px]
         -translate-x-1/2
         rounded-full
         bg-(--highlight)
-        blur-[120px]
+        blur-[130px]
         "
       />
 
-      <motion.div
-        animate={{
-          x: ["-100%", "200%"],
-        }}
-
-        transition={{
-          duration: 5,
-          repeat: Infinity,
-          repeatDelay: 4,
-          ease: "linear",
-        }}
-
+      <div
         className="
-absolute
-top-0
-left-0
-h-full
-w-20
-bg-white/30
-blur-xl
-rotate-12
-"
-      />
-
-      <div className="relative mx-auto max-w-6xl">
+        relative
+        mx-auto
+        max-w-6xl
+        "
+      >
         {/* Header */}
 
         <motion.div
@@ -109,60 +83,61 @@ rotate-12
             once: true,
           }}
 
-          transition={{
-            duration: 0.7,
-          }}
+          className="
+          max-w-3xl
+          "
         >
           <p
             className="
             font-mono
             text-xs
-            tracking-[.25em]
+            tracking-[0.3em]
             text-(--primary)
             "
           >
-            HOW IT WORKS
+            FEATURES
           </p>
 
           <h2
             className="
-            mt-4
-            max-w-3xl
+            mt-5
             font-heading
-            text-3xl
+            text-4xl
             font-bold
             leading-tight
             md:text-5xl
             "
           >
-            From random thoughts
+            Your conversations.
             <br />
-            to organized memories.
+            <span className="text-(--primary)">Your second brain.</span>
           </h2>
 
           <p
             className="
-            mt-4
+            mt-5
             max-w-xl
-            text-base
             text-muted-foreground
             "
           >
-            DailyBrief understands your conversations and brings back what matters.
+            DailyBrief transforms everyday messages into memories that understand context and return
+            when they matter.
           </p>
         </motion.div>
 
-        {/* Main Memory Card */}
+        {/* Main Experience */}
 
         <motion.div
           initial={{
             opacity: 0,
             y: 50,
+            scale: 0.96,
           }}
 
           whileInView={{
             opacity: 1,
             y: 0,
+            scale: 1,
           }}
 
           viewport={{
@@ -171,34 +146,53 @@ rotate-12
 
           transition={{
             duration: 0.8,
+            ease: [0.16, 1, 0.3, 1],
           }}
 
           className="
 relative
-mt-12
+mt-10
 overflow-hidden
-rounded-[32px]
+rounded-[40px]
 border
-border-white/80
-bg-white/50
-p-6
-shadow-[0_40px_120px_rgba(25,43,54,0.12)]
-backdrop-blur-2xl
-before:absolute
-before:inset-0
-before:rounded-[32px]
-before:bg-gradient-to-br
-before:from-white/80
-before:via-transparent
-before:to-(--highlight)
-before:opacity-40
+border-white/70
+bg-white/40
+p-7
+shadow-[0_40px_120px_rgba(25,43,54,.12)]
+backdrop-blur-3xl
+md:p-10
 "
         >
+          {/* Reflection */}
+
+          <motion.div
+            animate={{
+              x: ["-120%", "120%"],
+            }}
+
+            transition={{
+              duration: 6,
+              repeat: Infinity,
+              repeatDelay: 4,
+            }}
+
+            className="
+            absolute
+            top-0
+            h-full
+            w-24
+            rotate-12
+            bg-white/40
+            blur-xl
+            "
+          />
+
           <div
             className="
+            relative
             grid
             items-center
-            gap-8
+            gap-10
             md:grid-cols-2
             "
           >
@@ -207,84 +201,98 @@ before:opacity-40
             <div>
               <motion.div
                 animate={{
-                  y: [0, -6, 0],
+                  y: [0, -8, 0],
                 }}
 
                 transition={{
                   duration: 5,
                   repeat: Infinity,
+                  ease: "easeInOut",
                 }}
 
                 className="
                 flex
-                h-12
-                w-12
+                h-14
+                w-14
                 items-center
                 justify-center
                 rounded-2xl
                 bg-(--highlight)
                 text-(--primary)
+                shadow-lg
                 "
               >
-                <Brain size={24} />
+                <Brain size={28} />
               </motion.div>
 
               <h3
                 className="
-                mt-5
+                mt-6
                 font-heading
-                text-2xl
+                text-3xl
                 font-bold
                 "
               >
-                Your second brain.
+                Remember everything.
               </h3>
 
               <p
                 className="
-                mt-3
-                text-sm
+                mt-4
+                max-w-md
                 leading-relaxed
                 text-muted-foreground
                 "
               >
-                DailyBrief connects past conversations and resurfaces information before you start
-                searching.
+                Old conversations become useful again. DailyBrief connects past context before you
+                waste time searching.
               </p>
             </div>
 
-            {/* Memory UI */}
+            {/* Memory Story UI */}
 
             <div
               className="
               relative
               rounded-3xl
               bg-(--highlight)
-              p-5
+              p-6
               "
             >
               <p
                 className="
                 font-mono
                 text-[11px]
+                tracking-wider
                 text-(--primary)
                 "
               >
-                MEMORY FOUND
+                MEMORY CONNECTION
               </p>
 
+              {/* Old Message */}
+
               <motion.div
-                animate={{
-                  y: [0, -5, 0],
+                initial={{
+                  opacity: 0,
+                  y: 20,
+                }}
+
+                whileInView={{
+                  opacity: 1,
+                  y: 0,
+                }}
+
+                viewport={{
+                  once: true,
                 }}
 
                 transition={{
-                  duration: 6,
-                  repeat: Infinity,
+                  delay: 0.3,
                 }}
 
                 className="
-                mt-4
+                mt-5
                 rounded-2xl
                 bg-white
                 p-4
@@ -300,11 +308,11 @@ before:opacity-40
   font-medium
   "
                 >
-                  <span>&quot;</span>
-                  Need Docker setup for deployment
-                  <span>&quot;</span>
+                  &quot;Need Docker setup for deployment&quot;
                 </p>
               </motion.div>
+
+              {/* Connection Line */}
 
               <motion.div
                 initial={{
@@ -312,7 +320,11 @@ before:opacity-40
                 }}
 
                 whileInView={{
-                  height: 40,
+                  height: 45,
+                }}
+
+                viewport={{
+                  once: true,
                 }}
 
                 transition={{
@@ -326,10 +338,12 @@ before:opacity-40
                 "
               />
 
+              {/* Memory Result */}
+
               <motion.div
                 initial={{
                   opacity: 0,
-                  scale: 0.8,
+                  scale: 0.9,
                 }}
 
                 whileInView={{
@@ -337,8 +351,13 @@ before:opacity-40
                   scale: 1,
                 }}
 
+                viewport={{
+                  once: true,
+                }}
+
                 transition={{
-                  delay: 0.8,
+                  delay: 1,
+                  type: "spring",
                 }}
 
                 className="
@@ -350,29 +369,40 @@ before:opacity-40
               >
                 <div
                   className="
-                flex
-                items-center
-                gap-2
-                text-sm
-                font-semibold
-                "
+                  flex
+                  items-center
+                  gap-2
+                  text-sm
+                  font-semibold
+                  "
                 >
-                  <Brain size={16} className="text-(--primary)" />
-                  Memory connected
+                  <Brain size={17} className="text-(--primary)" />
+                  Memory found
                 </div>
+
+                <p
+                  className="
+                  mt-2
+                  text-xs
+                  text-muted-foreground
+                  "
+                >
+                  Connected with your previous deployment discussion.
+                </p>
               </motion.div>
             </div>
           </div>
         </motion.div>
 
-        {/* Feature cards */}
+        {/* Floating Feature Pills */}
 
         <div
           className="
-          mt-6
-          grid
-          gap-5
-          md:grid-cols-2
+          mt-5
+          flex
+          flex-wrap
+          justify-center
+          gap-3
           "
         >
           {features.map((item, index) => {
@@ -384,7 +414,7 @@ before:opacity-40
 
                 initial={{
                   opacity: 0,
-                  y: 30,
+                  y: 20,
                 }}
 
                 whileInView={{
@@ -401,84 +431,28 @@ before:opacity-40
                 }}
 
                 whileHover={{
-                  y: -6,
+                  y: -5,
+                  scale: 1.03,
                 }}
 
                 className="
-group
-relative
-overflow-hidden
-rounded-3xl
-border
-border-white/80
-bg-white/50
-p-5
-shadow-[0_20px_60px_rgba(25,43,54,0.08)]
-backdrop-blur-2xl
-transition-all
-duration-500
-before:absolute
-before:inset-0
-before:bg-gradient-to-br
-before:from-white/70
-before:via-transparent
-before:to-(--highlight)
-before:opacity-0
-before:transition-opacity
-before:duration-500
-hover:before:opacity-100
-"
+                flex
+                items-center
+                gap-2
+                rounded-full
+                border
+                border-white/70
+                bg-white/50
+                px-5
+                py-3
+                text-sm
+                shadow-sm
+                backdrop-blur-xl
+                "
               >
-                <div
-                  className="
-                  flex
-                  h-10
-                  w-10
-                  items-center
-                  justify-center
-                  rounded-xl
-                  bg-(--highlight)
-                  text-(--primary)
-                  "
-                >
-                  <Icon size={20} />
-                </div>
+                <Icon size={16} className="text-(--primary)" />
 
-                <h3
-                  className="
-                  mt-4
-                  font-heading
-                  font-semibold
-                  "
-                >
-                  {item.title}
-                </h3>
-
-                <p
-                  className="
-                  mt-2
-                  text-sm
-                  text-muted-foreground
-                  "
-                >
-                  {item.description}
-                </p>
-
-                <span
-                  className="
-                  mt-4
-                  inline-block
-                  rounded-full
-                  bg-(--highlight)
-                  px-3
-                  py-1
-                  font-mono
-                  text-[10px]
-                  text-(--primary)
-                  "
-                >
-                  {item.tag}
-                </span>
+                {item.title}
               </motion.div>
             );
           })}

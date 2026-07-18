@@ -1,86 +1,85 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Brain, Database, MessageCircle, Sparkles, Server } from "lucide-react";
+import { Brain, Bell, MessageCircle, Sparkles, Database, ArrowRight } from "lucide-react";
 
-const systems = [
+const flow = [
   {
-    name: "WhatsApp",
-    description: "User messages",
+    title: "Your message",
+    description: "Send anything naturally",
     icon: MessageCircle,
+    text: `"Need to submit assignment Friday"`,
   },
   {
-    name: "Twilio",
-    description: "Message delivery",
-    icon: MessageCircle,
-  },
-  {
-    name: "Gemini AI",
-    description: "Understands",
+    title: "AI understands",
+    description: "Finds what matters",
     icon: Sparkles,
+    text: "TASK • Deadline detected",
   },
   {
-    name: "Next.js",
-    description: "Runs logic",
-    icon: Server,
-  },
-  {
-    name: "pgvector",
-    description: "Stores memory",
+    title: "Memory stored",
+    description: "Keeps context alive",
     icon: Database,
+    text: "Related memory found",
+  },
+  {
+    title: "Right moment",
+    description: "Brings it back",
+    icon: Bell,
+    text: "Reminder tomorrow 9 AM",
   },
 ];
+
+const tech = ["WhatsApp", "Gemini AI", "Next.js", "PostgreSQL", "pgvector"];
 
 export default function Architecture() {
   return (
     <section
       id="architecture"
       className="
-relative
-overflow-hidden
-px-6
-py-28
-"
+      relative
+      overflow-hidden
+      px-6
+      py-16
+      "
     >
-      {/* Ambient glow */}
+      {/* Aurora */}
 
       <motion.div
         animate={{
-          scale: [1, 1.15, 1],
-          opacity: [0.15, 0.35, 0.15],
+          scale: [1, 1.2, 1],
+          opacity: [0.15, 0.3, 0.15],
         }}
-
         transition={{
-          duration: 10,
+          duration: 12,
           repeat: Infinity,
         }}
-
         className="
-absolute
-left-1/2
-top-40
-h-[400px]
-w-[400px]
--translate-x-1/2
-rounded-full
-bg-(--highlight)
-blur-[120px]
-"
+        absolute
+        left-1/2
+        top-20
+        h-[450px]
+        w-[450px]
+        -translate-x-1/2
+        rounded-full
+        bg-(--highlight)
+        blur-[120px]
+        "
       />
 
       <div
         className="
-relative
-mx-auto
-max-w-6xl
-"
+        relative
+        mx-auto
+        max-w-6xl
+        "
       >
-        {/* Header */}
+        {/* Heading */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 25,
+            y: 30,
           }}
 
           whileInView={{
@@ -92,72 +91,76 @@ max-w-6xl
             once: true,
           }}
 
-          className="
-text-center
-"
+          className="text-center"
         >
           <p
             className="
-font-mono
-text-xs
-tracking-[0.25em]
-text-(--primary)
-"
+            font-mono
+            text-xs
+            tracking-[0.3em]
+            text-(--primary)
+            "
           >
             UNDER THE HOOD
           </p>
 
           <h2
             className="
-mt-4
-font-heading
-text-4xl
-font-bold
-md:text-5xl
-"
+            mt-5
+            font-heading
+            text-4xl
+            font-bold
+            leading-tight
+            md:text-5xl
+            "
           >
-            Simple experience.
+            A simple message.
             <br />
-            Powerful system.
+            <span className="text-(--primary)">A powerful memory engine.</span>
           </h2>
 
           <p
             className="
-mx-auto
-mt-4
-max-w-xl
-text-sm
-text-muted-foreground
-"
+            mx-auto
+            mt-5
+            max-w-xl
+            text-muted-foreground
+            "
           >
-            Every message travels through a pipeline designed to understand and remember.
+            Every conversation passes through intelligence that understands, organizes, and
+            remembers what matters.
           </p>
         </motion.div>
 
-        {/* Pipeline */}
-
-        {/* Pipeline */}
+        {/* Flow */}
 
         <div
           className="
-  mt-16
-  flex
-  flex-wrap
-  items-center
-  justify-center
-  gap-4
-  "
+          mt-10
+          flex
+          flex-col
+          items-center
+          justify-center
+          gap-5
+          md:flex-row
+          "
         >
-          {systems.map((item, index) => {
+          {flow.map((item, index) => {
             const Icon = item.icon;
 
             return (
-              <div key={item.name} className="flex items-center gap-4">
+              <div
+                key={item.title}
+                className="
+                flex
+                items-center
+                "
+              >
                 <motion.div
                   initial={{
                     opacity: 0,
-                    y: 25,
-                    scale: 0.9,
+                    y: 30,
+                    scale: 0.95,
                   }}
 
                   whileInView={{
@@ -171,143 +174,229 @@ text-muted-foreground
                   }}
 
                   transition={{
-                    delay: index * 0.12,
-                    duration: 0.5,
+                    delay: index * 0.15,
+                    duration: 0.6,
                     ease: [0.16, 1, 0.3, 1],
                   }}
 
                   whileHover={{
-                    y: -6,
+                    y: -8,
                     scale: 1.04,
                   }}
 
+                  style={{
+                    transformPerspective: 1000,
+                  }}
+
                   className="
-relative
-w-36
-rounded-2xl
-border
-border-white/70
-bg-white/60
-px-4
-py-4
-text-center
-shadow-[0_15px_40px_rgba(25,43,54,.08)]
-backdrop-blur-xl
-"
+                  group
+                  relative
+                  w-52
+                  rounded-3xl
+                  border
+                  border-white/70
+                  bg-white/60
+                  p-5
+                  shadow-[0_20px_60px_rgba(25,43,54,.08)]
+                  backdrop-blur-xl
+                  "
                 >
-                  <div
-                    className="
-mx-auto
-flex
-h-9
-w-9
-items-center
-justify-center
-rounded-xl
-bg-(--highlight)
-text-(--primary)
-"
-                  >
-                    <Icon size={17} />
-                  </div>
+                  {/* Glow */}
 
-                  <p
-                    className="
-mt-3
-text-xs
-font-semibold
-"
-                  >
-                    {item.name}
-                  </p>
-
-                  <p
-                    className="
-mt-1
-font-mono
-text-[9px]
-text-muted-foreground
-"
-                  >
-                    {item.description}
-                  </p>
-                </motion.div>
-
-                {index !== systems.length - 1 && (
                   <motion.div
                     animate={{
-                      scaleX: [0, 1, 0],
+                      opacity: [0, 0.4, 0],
                     }}
 
                     transition={{
-                      duration: 2,
+                      duration: 3,
                       repeat: Infinity,
-                      delay: index * 0.3,
                     }}
 
                     className="
-hidden
-h-px
-w-8
-origin-left
-bg-(--primary)
-md:block
-"
+                    absolute
+                    inset-0
+                    rounded-3xl
+                    bg-(--highlight)
+                    blur-xl
+                    "
                   />
+
+                  <div className="relative">
+                    <div
+                      className="
+                      flex
+                      h-10
+                      w-10
+                      items-center
+                      justify-center
+                      rounded-2xl
+                      bg-(--highlight)
+                      text-(--primary)
+                      "
+                    >
+                      <Icon size={19} />
+                    </div>
+
+                    <h3
+                      className="
+                      mt-4
+                      font-semibold
+                      "
+                    >
+                      {item.title}
+                    </h3>
+
+                    <p
+                      className="
+                      mt-1
+                      text-xs
+                      text-muted-foreground
+                      "
+                    >
+                      {item.description}
+                    </p>
+
+                    <div
+                      className="
+                      mt-4
+                      rounded-xl
+                      bg-white/70
+                      px-3
+                      py-2
+                      text-[11px]
+                      font-mono
+                      "
+                    >
+                      {item.text}
+                    </div>
+                  </div>
+                </motion.div>
+
+                {/* Connector */}
+
+                {index !== flow.length - 1 && (
+                  <div
+                    className="
+                    relative
+                    mx-3
+                    hidden
+                    h-px
+                    w-10
+                    bg-border
+                    md:block
+                    "
+                  >
+                    <motion.div
+                      animate={{
+                        x: [0, 35, 0],
+                      }}
+
+                      transition={{
+                        duration: 2,
+                        repeat: Infinity,
+                        delay: index * 0.3,
+                      }}
+
+                      className="
+                      absolute
+                      top-1/2
+                      h-2
+                      w-2
+                      -translate-y-1/2
+                      rounded-full
+                      bg-(--primary)
+                      shadow-lg
+                      "
+                    />
+                  </div>
                 )}
               </div>
             );
           })}
         </div>
 
-        {/* Memory result */}
+        {/* Floating Memory */}
+
+        <motion.div
+          animate={{
+            y: [0, -12, 0],
+          }}
+
+          transition={{
+            duration: 6,
+            repeat: Infinity,
+            ease: "easeInOut",
+          }}
+
+          className="
+          absolute
+          -left-5
+          top-52
+          hidden
+          rounded-3xl
+          border
+          bg-white/70
+          p-4
+          shadow-xl
+          backdrop-blur-xl
+          lg:block
+          "
+        >
+          <div className="flex gap-2 items-center">
+            <Brain size={17} className="text-(--primary)" />
+
+            <span className="text-xs font-semibold">Memory found</span>
+          </div>
+
+          <p className="mt-2 text-[11px] text-muted-foreground">
+            Docker discussion
+            <br />
+            10 days ago
+          </p>
+        </motion.div>
+
+        {/* Tech */}
 
         <motion.div
           initial={{
             opacity: 0,
-            y: 20,
           }}
 
           whileInView={{
             opacity: 1,
-            y: 0,
           }}
 
           viewport={{
             once: true,
           }}
 
-          transition={{
-            delay: 0.6,
-          }}
-
           className="
-mx-auto
-mt-10
-flex
-w-fit
-items-center
-gap-3
-rounded-full
-border
-border-white/70
-bg-white/70
-px-5
-py-3
-shadow-lg
-backdrop-blur-xl
-"
+          mt-8
+          flex
+          flex-wrap
+          justify-center
+          gap-3
+          "
         >
-          <Brain size={18} className="text-(--primary)" />
-
-          <span
-            className="
-text-sm
-font-medium
-"
-          >
-            Your message becomes memory
-          </span>
+          {tech.map((item) => (
+            <span
+              key={item}
+              className="
+              rounded-full
+              border
+              border-white/70
+              bg-white/60
+              px-4
+              py-2
+              text-xs
+              font-mono
+              backdrop-blur-xl
+              "
+            >
+              {item}
+            </span>
+          ))}
         </motion.div>
       </div>
     </section>
