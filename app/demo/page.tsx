@@ -215,7 +215,7 @@ export default function DemoPage() {
 
             <iframe
               className="h-full w-full"
-              src="https://www.youtube.com/embed/YOUR_VIDEO_ID"
+              src="https://youtu.be/raR7h5INwAI"
               title="DailyBrief working demo"
               allowFullScreen
             />
