@@ -237,63 +237,65 @@ bg-(--primary)
             scale: 0.96,
           }}
         >
+          <Link href="/demo">
           <Button
             className="
-group
-relative
-overflow-hidden
-rounded-full
-bg-(--primary)
-px-6
-py-5
-font-semibold
-text-white
-shadow-[0_12px_30px_rgba(82,167,131,.35)]
-"
-          >
+            group
+            relative
+            overflow-hidden
+            rounded-full
+            bg-(--primary)
+            px-6
+            py-5
+            font-semibold
+            text-white
+            shadow-[0_12px_30px_rgba(82,167,131,.35)]
+            "
+            >
             {/* Shine */}
 
             <motion.span
               animate={{
                 x: ["-120%", "150%"],
               }}
-
+              
               transition={{
                 duration: 4,
                 repeat: Infinity,
                 repeatDelay: 5,
               }}
-
+              
               className="
-absolute
-inset-y-0
-w-10
-rotate-12
-bg-white/30
-blur-sm
-"
-            />
+              absolute
+              inset-y-0
+              w-10
+              rotate-12
+              bg-white/30
+              blur-sm
+              "
+              />
 
             <span
               className="
-relative
-flex
-items-center
-gap-2
-"
-            >
+              relative
+              flex
+              items-center
+              gap-2
+              "
+              >
               Start WhatsApp
               <ArrowRight
                 size={16}
-
+                
                 className="
-transition-transform
-duration-300
-group-hover:translate-x-1
-"
-              />
+                transition-transform
+                duration-300
+                group-hover:translate-x-1
+                "
+                />
             </span>
           </Button>
+                </Link>
         </motion.div>
       </motion.div>
     </motion.nav>

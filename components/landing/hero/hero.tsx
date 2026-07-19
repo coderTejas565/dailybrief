@@ -2,6 +2,7 @@
 
 import { motion } from "framer-motion";
 import { ArrowRight } from "lucide-react";
+import Link from "next/link";
 
 import { Button } from "@/components/ui/button";
 
@@ -181,59 +182,60 @@ export default function Hero() {
                 scale: 0.96,
               }}
             >
-              <Button
-                className="
-                group
-                relative
-                overflow-hidden
-                rounded-full
-                bg-(--primary)
-                px-7
-                py-5
-                text-sm
-                font-semibold
-                text-white
-                shadow-xl
-                "
-              >
-                <motion.span
-                  animate={{
-                    x: ["-120%", "120%"],
-                  }}
+              <Link href="/demo">
+  <Button
+    className="
+    group
+    relative
+    overflow-hidden
+    rounded-full
+    bg-(--primary)
+    px-7
+    py-5
+    text-sm
+    font-semibold
+    text-white
+    shadow-xl
+    "
+  >
+    <motion.span
+      animate={{
+        x: ["-120%", "120%"],
+      }}
+      transition={{
+        duration: 3,
+        repeat: Infinity,
+        repeatDelay: 3,
+      }}
+      className="
+      absolute
+      inset-y-0
+      w-16
+      rotate-12
+      bg-white/30
+      "
+    />
 
-                  transition={{
-                    duration: 3,
-                    repeat: Infinity,
-                    repeatDelay: 3,
-                  }}
+    <span
+      className="
+      relative
+      flex
+      items-center
+      "
+    >
+      Start remembering
+      <ArrowRight
+        size={17}
+        className="
+        ml-2
+        transition-transform
+        group-hover:translate-x-1
+        "
+      />
+    </span>
 
-                  className="
-                  absolute
-                  inset-y-0
-                  w-16
-                  rotate-12
-                  bg-white/30
-                  "
-                />
-
-                <span
-                  className="
-                  relative
-                  flex
-                  items-center
-                  "
-                >
-                  Start remembering
-                  <ArrowRight
-                    size={17}
-                    className="
-                    ml-2
-                    transition-transform
-                    group-hover:translate-x-1
-                    "
-                  />
-                </span>
-              </Button>
+  </Button>
+</Link>
             </motion.div>
 
             <p

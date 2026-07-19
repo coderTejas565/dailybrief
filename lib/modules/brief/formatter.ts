@@ -2,17 +2,20 @@ import type { messages } from "@/lib/db/schema";
 
 type Message = typeof messages.$inferSelect;
 
+
 export type BriefItem = {
   position: number;
   message: Message;
 };
 
+
 const CATEGORY_LABELS: Record<string, string> = {
-  TASK: "🔥",
-  REMINDER: "⏰",
-  IDEA: "💡",
-  NOTE: "📝",
+  TASK: "🔥 Tasks",
+  REMINDER: "⏰ Reminders",
+  IDEA: "💡 Ideas",
+  NOTE: "📝 Notes",
 };
+
 
 export function buildBriefItems(items: Message[]): BriefItem[] {
   return items.map((message, index) => ({
@@ -21,24 +24,51 @@ export function buildBriefItems(items: Message[]): BriefItem[] {
   }));
 }
 
+
 export function formatBrief(items: BriefItem[]): string {
   if (items.length === 0) {
     return "📋 DailyBrief\n\nNothing pending 🎉";
   }
 
-  let result = "📋 DailyBrief\n";
+
+  const groups: Record<string, BriefItem[]> = {};
+
 
   for (const item of items) {
-    const icon = CATEGORY_LABELS[item.message.category] ?? "📌";
+    const category = item.message.category;
 
-    result += `\n${item.position}. ${icon} ${item.message.rawText}`;
 
-    if (item.message.extractedDate) {
-      result += ` 📅 ${item.message.extractedDate.toDateString()}`;
+    if (!groups[category]) {
+      groups[category] = [];
     }
 
-    result += "\n";
+
+    groups[category].push(item);
   }
+
+
+  let result = "📋 DailyBrief\n";
+
+
+  for (const [category, groupItems] of Object.entries(groups)) {
+
+    result += `\n${CATEGORY_LABELS[category] ?? category}\n`;
+
+
+    groupItems.forEach((item, index) => {
+
+      result += `${index + 1}. ${item.message.rawText}`;
+
+
+      if (item.message.extractedDate) {
+        result += ` 📅 ${item.message.extractedDate.toDateString()}`;
+      }
+
+
+      result += "\n";
+    });
+  }
+
 
   return result.trim();
 }

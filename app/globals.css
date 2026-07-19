@@ -125,6 +125,50 @@
 
 }
 
+/* =========================
+   Dark Theme
+========================= */
+
+.dark {
+
+  /* Brand */
+
+  --background: #0F1720;
+  --foreground: #F8FAFC;
+
+  --primary: #52A783;
+  --primary-foreground: #FFFFFF;
+
+  --highlight: #173A2E;
+
+  /* AI */
+
+  --ai: #8B83FF;
+
+  /* Text */
+
+  --muted-text: #94A3B8;
+
+  /* Surfaces */
+
+  --card: #18222D;
+  --card-foreground: #F8FAFC;
+
+  --secondary: #1F2B38;
+  --secondary-foreground: #F8FAFC;
+
+  --muted: #1A2530;
+  --muted-foreground: #94A3B8;
+
+  /* Borders */
+
+  --border: #293647;
+  --input: #293647;
+
+  --ring: #52A783;
+
+}
+
 
 
 /* =========================

@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { ArrowRight, Brain, Sparkles } from "lucide-react";
+import Link from "next/link";
 
 export default function FinalCTA() {
   return (
@@ -310,6 +311,7 @@ export default function FinalCTA() {
               inline-block
               "
             >
+              <Link href="/demo">
               <Button
                 className="
                 group
@@ -320,7 +322,7 @@ export default function FinalCTA() {
                 text-white
                 shadow-[0_15px_40px_rgba(82,167,131,.35)]
                 "
-              >
+                >
                 Start on WhatsApp
                 <ArrowRight
                   size={17}
@@ -329,8 +331,9 @@ export default function FinalCTA() {
                   transition-transform
                   group-hover:translate-x-1
                   "
-                />
+                  />
               </Button>
+                  </Link>
             </motion.div>
           </div>
         </motion.div>
