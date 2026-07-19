@@ -24,7 +24,6 @@ export function buildBriefItems(items: Message[]): BriefItem[] {
   }));
 }
 
-
 export function formatBrief(items: BriefItem[]): string {
   if (items.length === 0) {
     return "📋 DailyBrief\n\nNothing pending 🎉";
@@ -37,11 +36,9 @@ export function formatBrief(items: BriefItem[]): string {
   for (const item of items) {
     const category = item.message.category;
 
-
     if (!groups[category]) {
       groups[category] = [];
     }
-
 
     groups[category].push(item);
   }
@@ -55,9 +52,10 @@ export function formatBrief(items: BriefItem[]): string {
     result += `\n${CATEGORY_LABELS[category] ?? category}\n`;
 
 
-    groupItems.forEach((item, index) => {
+    for (const item of groupItems) {
 
-      result += `${index + 1}. ${item.message.rawText}`;
+      // IMPORTANT: keep original global position
+      result += `${item.position}. ${item.message.rawText}`;
 
 
       if (item.message.extractedDate) {
@@ -66,7 +64,7 @@ export function formatBrief(items: BriefItem[]): string {
 
 
       result += "\n";
-    });
+    }
   }
 
 
