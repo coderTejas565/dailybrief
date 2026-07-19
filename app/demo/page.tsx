@@ -215,10 +215,15 @@ export default function DemoPage() {
 
             <iframe
               className="h-full w-full"
-              src="https://www.youtube.com/watch?v=raR7h5INwAI"
+              src="https://www.youtube.com/embed/raR7h5INwAI"
               title="DailyBrief working demo"
               allowFullScreen
             />
+
+            <p className="mt-4 text-sm text-gray-500">
+  This demo shows the complete workflow using a verified WhatsApp account.
+  Public access will be available after WhatsApp Business verification.
+</p>
 
           </div>
 
